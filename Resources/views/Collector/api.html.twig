@@ -1,0 +1,58 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        <span style="display:block; float: left; background-color: #3F3F3F; color: #F7F7F7; font-family: sans-serif; font-size: 10px; padding: 2px 2px 1px 2px; margin: 1px 5px 1px 0;">API</span>
+    {% endset %}
+    {% set text %}
+        <span title="{{ '%0.2f'|format(collector.time * 1000) }} ms">{{ collector.callcount }}</span>
+    {% endset %}
+    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url } %}
+{% endblock %}
+
+{% block menu %}
+<span class="label">
+    <span class="icon">
+      <span style="display:block; float: left; background-color: #3F3F3F; color: #F7F7F7; font-family: sans-serif; font-size: 15px; padding: 4px 4px 3px 4px; margin: 3px 15px;">API</span>
+    </span>
+    <strong>CALLS</strong>
+    <span class="count">
+        <span>{{ collector.callcount }}</span>
+        <span>{{ '%0.0f'|format(collector.time * 1000) }} ms</span>
+    </span>
+</span>
+{% endblock %}
+
+{% block panel %}
+    <h2>API Calls</h2>
+
+    {% if not collector.callcount %}
+        <p>
+            <em>No calls.</em>
+        </p>
+    {% else %}
+        <ul class="alt">
+            {% for i, call in collector.calls %}
+                <li class="{{ i is odd ? 'odd' : 'even' }}">
+                    <div>
+                        <strong>Status</strong>: {{ call.status }}<br />
+                        <strong>URL</strong>: {{ call.url }}<br />
+                        <strong>Type</strong>: {{ call.type }}<br />
+                        <strong>Request</strong>: {{ call.requestData|length }} bytes
+                          <a href="data:text/plain;,{{ call.requestData|url_encode(true) }}">raw</a> 
+                          <a href="data:text/plain;,{{ call.requestObject|url_encode(true) }}">parsed</a>
+                          <br /> 
+                        <strong>Response</strong>: {{ call.responseData|length }} bytes
+                          <a href="data:text/plain;,{{ call.responseData|url_encode(true) }}">raw</a> 
+                          <a href="data:text/plain;,{{ call.responseObject|url_encode(true) }}">parsed</a>
+                          <br /> 
+                    </div>
+                    <small>
+                        <strong>Time</strong>: {{ '%0.2f'|format(call.executionMS * 1000) }} ms
+                    </small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}
