@@ -30,6 +30,16 @@ class ApiCallDataCollector extends DataCollector
     );
   }
 
+  public function getReturnedErrorCount()
+  {
+    $errors = 0;
+    foreach ($this->data['calls'] as $call)
+    {
+      $errors += $call['status']!='200 OK'?1:0;
+    }
+    return $errors;
+  }
+  
   public function getCallCount()
   {
     return count($this->data['calls']);

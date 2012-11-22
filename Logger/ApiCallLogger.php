@@ -59,9 +59,10 @@ class ApiCallLogger implements ApiCallLoggerInterface
     if (null !== $this->logger) {
       $type = $this->calls[$this->currentCall]['type'];
       $url = $this->calls[$this->currentCall]['url']; 
+      $requestData = $this->calls[$this->currentCall]['requestData'];
       $responseDataLength = strlen($responseData);
       $executionMS = sprintf('%0.2f',$executionMS * 1000);
-      $this->logger->debug("API call \"$type\" requested \"$url\" that returned \"$status\" in $executionMS ms sending $responseDataLength bytes");
+      $this->logger->debug("API call \"$type\" requested \"$url?$requestData\" that returned \"$status\" in $executionMS ms sending $responseDataLength bytes");
     }    
 
   }

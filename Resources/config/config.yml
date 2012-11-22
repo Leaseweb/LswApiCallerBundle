@@ -3,3 +3,4 @@ parameters:
         timeout: 10
         ssl_verifypeer: false
         useragent: "LeaseWeb API Caller"
+        followlocation: true

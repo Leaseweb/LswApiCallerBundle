@@ -19,4 +19,6 @@ interface ApiCallerInterface
    */
   public function call(ApiCallInterface $call);
     
+  public function getLastStatus();
+
 }

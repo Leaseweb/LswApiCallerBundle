@@ -2,10 +2,28 @@
 
 {% block toolbar %}
     {% set icon %}
-        <span style="display:block; float: left; background-color: #3F3F3F; color: #F7F7F7; font-family: sans-serif; font-size: 10px; padding: 2px 2px 1px 2px; margin: 1px 5px 1px 0;">API</span>
+        <img width="20" height="28" alt="API" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAcCAYAAABh2p9gAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wLDw87Hzx98kMAAAAZdEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAABe0lEQVRIx+2VzyvDcRjHX58vJs3XrySTiUkODhbNkFp+zLabC8pFJDf/AFGIFOXqoJYfB/MzF0mSgxLiIGtGidMK7bI2v7bmIpSNlDTNc3yenlfv593z9AiXy8VPRqwQIrKBEj8ckT+yMBgMwYj28M8BBXJFP6vrVlo1cW9puYqxtXVW5m0sLC0xM9qBLkUCuYpR2wA6ZTigSKLYksvVYYDKajWKd6WgZ5/htmYamzqZcNfS1VJA/FcKpWQtFrWDWesaD/o6chQhOgJuTnZdKHPTiP0cKJFSYibLuYH9cpetuzKMeR81CIUKfU02nvMbnkIt9hsvlVKTilObE6//nr1tL0NGDVang3tAyGX0Ti/yhJ/b42XG5i54JDM8UErTYSnKJL9nisUgICWQ+Ggif9KB/cXDwfY+DrzvuuWwCiXS9SbSd7ppGTnCCxCjomF8BHNBAvbL765NTAbl9RmcbTp5FRC4Zm/Lg9ZSiPL/ln8VKHw+X5S9gCh8o89GYm0IsAZIJwAAAABJRU5ErkJggg==" />
+        <span class="sf-toolbar-status{% if 5 < collector.callcount %} sf-toolbar-status-yellow{% endif %}">{{ collector.callcount }}</span>
+        {% if collector.callcount > 0 %}
+            <span class="sf-toolbar-info-piece-additional-detail">in {{ '%0.2f'|format(collector.time * 1000) }} ms</span>
+        {% endif %}
+        {% if collector.returnedErrorCount > 0 %}
+            <span class="sf-toolbar-info-piece-additional sf-toolbar-status sf-toolbar-status-red"> </span>
+        {% endif %}
     {% endset %}
     {% set text %}
-        <span title="{{ '%0.2f'|format(collector.time * 1000) }} ms">{{ collector.callcount }}</span>
+        <div class="sf-toolbar-info-piece">
+            <b>API Calls</b>
+            <span>{{ collector.callcount }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Total time</b>
+            <span>{{ '%0.2f'|format(collector.time * 1000) }} ms</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Errors</b>
+            <span class="sf-toolbar-status sf-toolbar-status-{{ collector.returnedErrorCount > 0 ? 'red' : 'green' }}">{{ collector.returnedErrorCount }}</span>
+        </div>
     {% endset %}
     {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url } %}
 {% endblock %}
@@ -13,9 +31,9 @@
 {% block menu %}
 <span class="label">
     <span class="icon">
-      <span style="display:block; float: left; background-color: #3F3F3F; color: #F7F7F7; font-family: sans-serif; font-size: 15px; padding: 4px 4px 3px 4px; margin: 3px 15px;">API</span>
+      <span style="display:block; float: left; background-color: #3F3F3F; color: #F7F7F7; font-family: sans-serif; font-size: 15px; padding: 4px 4px 3px 4px; margin: 3px 15px;">{{ _('API') }}</span>
     </span>
-    <strong>CALLS</strong>
+    <strong>{{ _('CALLS') }}</strong>
     <span class="count">
         <span>{{ collector.callcount }}</span>
         <span>{{ '%0.0f'|format(collector.time * 1000) }} ms</span>
@@ -24,27 +42,29 @@
 {% endblock %}
 
 {% block panel %}
-    <h2>API Calls</h2>
+    <h2>{{ _('API Calls') }}</h2>
 
     {% if not collector.callcount %}
         <p>
-            <em>No calls.</em>
+            <em>{{ _('No calls.') }}</em>
         </p>
     {% else %}
         <ul class="alt">
             {% for i, call in collector.calls %}
                 <li class="{{ i is odd ? 'odd' : 'even' }}">
                     <div>
-                        <strong>Status</strong>: {{ call.status }}<br />
-                        <strong>URL</strong>: {{ call.url }}<br />
-                        <strong>Type</strong>: {{ call.type }}<br />
-                        <strong>Request</strong>: {{ call.requestData|length }} bytes
-                          <a href="data:text/plain;,{{ call.requestData|url_encode(true) }}">raw</a> 
-                          <a href="data:text/plain;,{{ call.requestObject|url_encode(true) }}">parsed</a>
-                          <br /> 
-                        <strong>Response</strong>: {{ call.responseData|length }} bytes
-                          <a href="data:text/plain;,{{ call.responseData|url_encode(true) }}">raw</a> 
-                          <a href="data:text/plain;,{{ call.responseObject|url_encode(true) }}">parsed</a>
+                        <strong>{{ _('Status') }}</strong>: {{ call.status }}<br />
+                        <strong>{{ _('URL') }}</strong>: {{ call.url }}<br />
+                        <strong>{{ _('Type') }}</strong>: {{ call.type }}<br />
+                        <strong>{{ _('Request') }}</strong>: {{ call.requestData|length }} {{ _('bytes') }}
+                          <a href="data:text/plain;,{{ call.requestData|url_encode(true) }}">{{ _('raw') }}</a>
+                          <a href="data:text/html;,{{ call.requestData|url_encode(true) }}">{{ _('html') }}</a>
+                          <a href="data:text/plain;,{{ call.requestObject|url_encode(true) }}">{{ _('parsed') }}</a>
+                          <br />
+                        <strong>Response</strong>: {{ call.responseData|length }} {{ _('bytes') }}
+                          <a href="data:text/plain;,{{ call.responseData|url_encode(true) }}">{{ _('raw') }}</a> 
+                          <a href="data:text/html;,{{ call.responseData|url_encode(true) }}">{{ _('html') }}</a> 
+                          <a href="data:text/plain;,{{ call.responseObject|url_encode(true) }}">{{ _('parsed') }}</a>
                           <br /> 
                     </div>
                     <small>

@@ -17,4 +17,4 @@ services:
         class: %data_collector.api_caller.class%
         arguments: [@api_caller.logger]
         tags:
-            - { name: data_collector, template: %data_collector.api_caller.template%, id:"api"}            
+            - { name: data_collector, template: %data_collector.api_caller.template%, id:"api"}
