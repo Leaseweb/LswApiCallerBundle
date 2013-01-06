@@ -14,7 +14,15 @@ class CurlApiCaller implements ApiCallerInterface
     private $options;
     private $logger;
     private $lastStatusCode;
-  
+
+    /**
+     * Constructor
+     *
+     * @param array                  $options Options array
+     * @param ApiCallLoggerInterface $logger  Logger
+     *
+     * @throws \Exception
+     */
     public function __construct($options, ApiCallLoggerInterface $logger = null)
     {
         $options['returntransfer']=true;
@@ -25,12 +33,15 @@ class CurlApiCaller implements ApiCallerInterface
             throw new \Exception("Class '$class' depends on the PHP cURL library that is currently not installed");
         }
     }
-  
+
+    /**
+     * {@inheritdoc}
+     */
     public function getLastStatus()
     {
         return self::getStatus($this->lastStatusCode);
     }
-  
+
     /**
     * {@inheritdoc}
     */
@@ -49,27 +60,42 @@ class CurlApiCaller implements ApiCallerInterface
             $this->logger->stopCall($call, $status);
         }
         curl_close($curlHandle);
-        
+
         $result = $call->getResponseObject();
 
         return $result;
     }
-  
-    static function parseCurlOptions($config)
+
+    /**
+     * Static method to parse cURL options from config. If some option is not defined an exception will be thrown.
+     *
+     * @param array $config Config
+     *
+     * @throws \Exception
+     * @return array
+     */
+    static public function parseCurlOptions($config)
     {
         $options = array();
-        foreach ($config as $key=>$value) {
+        foreach ($config as $key => $value) {
             $prefix = 'CURLOPT_';
             if (!defined($prefix.strtoupper($key))) {
                 throw new \Exception("Invalid option '$key' in apicaller.config parameter. Use options (from the cURL section in the PHP manual) without prefix '$prefix'");
             }
             $options[constant('CURLOPT_'.strtoupper($key))]=$value;
         }
-        
+
         return $options;
     }
-  
-    static function getStatus($code)
+
+    /**
+     * Static method to get HTTP status message by HTTP status code
+     *
+     * @param int $code HTTP status code
+     *
+     * @return int/string HTTP status message
+     */
+    static public function getStatus($code)
     {
         $codes = array(
             0   => 'Connection failed',
@@ -116,7 +142,7 @@ class CurlApiCaller implements ApiCallerInterface
         if (isset($codes[$code])) {
             return "$code $codes[$code]";
         }
-        
+
         return $code;
     }
 }

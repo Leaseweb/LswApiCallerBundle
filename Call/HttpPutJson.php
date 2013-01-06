@@ -8,24 +8,33 @@ namespace Lsw\ApiCallerBundle\Call;
  */
 class HttpPutJson extends ApiCall implements ApiCallInterface
 {
-  public function generateRequestData()
-  {
-    $this->requestData = http_build_query($this->requestObject);
-  }
-  
-  public function parseResponseData()
-  {
-    $this->responseObject = json_decode($this->responseData);
-  }
-  
-  public function makeRequest($curlHandle, $options)
-  {
-    curl_setopt($curlHandle, CURLOPT_URL, $this->url);
-    curl_setopt($curlHandle, CURLOPT_POST, 1);
-    curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->requestData);
-    curl_setopt($curlHandle, CURLOPT_PUT, 1);
-    curl_setopt_array($curlHandle, $options);
-    $this->responseData = curl_exec($curlHandle);
-  }
-  
+    /**
+     * {@inheritdoc}
+     */
+    public function generateRequestData()
+    {
+        $this->requestData = http_build_query($this->requestObject);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function parseResponseData()
+    {
+        $this->responseObject = json_decode($this->responseData);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function makeRequest($curlHandle, $options)
+    {
+        curl_setopt($curlHandle, CURLOPT_URL, $this->url);
+        curl_setopt($curlHandle, CURLOPT_POST, 1);
+        curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->requestData);
+        curl_setopt($curlHandle, CURLOPT_PUT, 1);
+        curl_setopt_array($curlHandle, $options);
+        $this->responseData = curl_exec($curlHandle);
+    }
+
 }

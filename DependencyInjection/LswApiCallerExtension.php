@@ -9,25 +9,25 @@ use Symfony\Component\DependencyInjection\Loader;
 use Lsw\ApiBundle\Entity\Api;
 
 /**
- * This is the class that loads and manages the bundle configuration
- *
- * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
+ * {@inheritDoc}
  */
 class LswApiCallerExtension extends Extension
 {
-  /**
-   * {@inheritDoc}
-   */
-  public function load(array $configs, ContainerBuilder $container)
-  {
-    $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-    $loader->load('config.yml');
-    $loader->load('services.yml');
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('config.yml');
+        $loader->load('services.yml');
+    }
 
-
-  public function getAlias()
-  { 
-    return 'lsw_api_caller';
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public function getAlias()
+    {
+        return 'lsw_api_caller';
+    }
 }

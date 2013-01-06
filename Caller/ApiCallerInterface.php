@@ -11,14 +11,18 @@ use Lsw\ApiCallerBundle\Call\ApiCallInterface;
  */
 interface ApiCallerInterface
 {
-  /**
-   * Execute an API call using the HTTP GET method
-   *
-   * @param string ApiCallInterface The API call
-   * @return string The parsed response of the API call 
-   */
-  public function call(ApiCallInterface $call);
-    
-  public function getLastStatus();
+    /**
+     * Execute an API call using a certain method
+     *
+     * @param ApiCallInterface $call The API call
+     *
+     * @return string The parsed response of the API call
+     */
+    public function call(ApiCallInterface $call);
+
+    /**
+     * Method returns last status
+     */
+    public function getLastStatus();
 
 }

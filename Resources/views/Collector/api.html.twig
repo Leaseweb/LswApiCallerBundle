@@ -31,9 +31,9 @@
 {% block menu %}
 <span class="label">
     <span class="icon">
-      <span style="display:block; float: left; background-color: #3F3F3F; color: #F7F7F7; font-family: sans-serif; font-size: 15px; padding: 4px 4px 3px 4px; margin: 3px 15px;">{{ _('API') }}</span>
+      <span style="display:block; float: left; background-color: #3F3F3F; color: #F7F7F7; font-family: sans-serif; font-size: 15px; padding: 4px 4px 3px 4px; margin: 3px 15px;">API</span>
     </span>
-    <strong>{{ _('CALLS') }}</strong>
+    <strong>CALLS</strong>
     <span class="count">
         <span>{{ collector.callcount }}</span>
         <span>{{ '%0.0f'|format(collector.time * 1000) }} ms</span>
@@ -42,29 +42,29 @@
 {% endblock %}
 
 {% block panel %}
-    <h2>{{ _('API Calls') }}</h2>
+    <h2>API Calls</h2>
 
     {% if not collector.callcount %}
         <p>
-            <em>{{ _('No calls.') }}</em>
+            <em>No calls.</em>
         </p>
     {% else %}
         <ul class="alt">
             {% for i, call in collector.calls %}
                 <li class="{{ i is odd ? 'odd' : 'even' }}">
                     <div>
-                        <strong>{{ _('Status') }}</strong>: {{ call.status }}<br />
-                        <strong>{{ _('URL') }}</strong>: {{ call.url }}<br />
-                        <strong>{{ _('Type') }}</strong>: {{ call.type }}<br />
-                        <strong>{{ _('Request') }}</strong>: {{ call.requestData|length }} {{ _('bytes') }}
-                          <a href="data:text/plain;,{{ call.requestData|url_encode(true) }}">{{ _('raw') }}</a>
-                          <a href="data:text/html;,{{ call.requestData|url_encode(true) }}">{{ _('html') }}</a>
-                          <a href="data:text/plain;,{{ call.requestObject|url_encode(true) }}">{{ _('parsed') }}</a>
+                        <strong>Status</strong>: {{ call.status }}<br />
+                        <strong>URL</strong>: {{ call.url }}<br />
+                        <strong>Type</strong>: {{ call.type }}<br />
+                        <strong>Request</strong>: {{ call.requestData|length }} bytes
+                          <a href="data:text/plain;,{{ call.requestData|url_encode(true) }}">raw</a>
+                          <a href="data:text/html;,{{ call.requestData|url_encode(true) }}">html</a>
+                          <a href="data:text/plain;,{{ call.requestObject|url_encode(true) }}">parsed</a>
                           <br />
-                        <strong>Response</strong>: {{ call.responseData|length }} {{ _('bytes') }}
-                          <a href="data:text/plain;,{{ call.responseData|url_encode(true) }}">{{ _('raw') }}</a> 
-                          <a href="data:text/html;,{{ call.responseData|url_encode(true) }}">{{ _('html') }}</a> 
-                          <a href="data:text/plain;,{{ call.responseObject|url_encode(true) }}">{{ _('parsed') }}</a>
+                        <strong>Response</strong>: {{ call.responseData|length }} bytes
+                          <a href="data:text/plain;,{{ call.responseData|url_encode(true) }}">raw</a> 
+                          <a href="data:text/html;,{{ call.responseData|url_encode(true) }}">html</a> 
+                          <a href="data:text/plain;,{{ call.responseObject|url_encode(true) }}">parsed</a>
                           <br /> 
                     </div>
                     <small>

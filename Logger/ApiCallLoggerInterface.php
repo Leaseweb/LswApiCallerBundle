@@ -11,21 +11,23 @@ use Lsw\ApiCallerBundle\Call\ApiCallInterface;
  */
 interface ApiCallLoggerInterface
 {
-  /**
-   * Logs an API call.
-   *
-   * @param ApiCallInterface $call The API call
-   * @return void
-   */
-  public function startCall(ApiCallInterface $call);
+    /**
+     * Logs an API call.
+     *
+     * @param ApiCallInterface $call The API call
+     *
+     * @return void
+     */
+    public function startCall(ApiCallInterface $call);
 
-  /**
-   * Mark the last started call as stopped and register the response.
-   * This is used for timing of calls and registering reponse data.
-   *
-   * @param ApiCallInterface $call The API call
-   * @param int $status The API call response http status code (like: 200 OK).
-   * @return void
-   */
-  public function stopCall(ApiCallInterface $call, $status);
+    /**
+     * Mark the last started call as stopped and register the response.
+     * This is used for timing of calls and registering reponse data.
+     *
+     * @param ApiCallInterface $call   The API call
+     * @param int              $status The API call response http status code (like: 200 OK).
+     *
+     * @return void
+     */
+    public function stopCall(ApiCallInterface $call, $status);
 }

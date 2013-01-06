@@ -13,58 +13,83 @@ use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
  */
 class ApiCallDataCollector extends DataCollector
 {
-  private $logger;
+    private $logger;
 
-  public function __construct(ApiCallLoggerInterface $logger = null)
-  {
-    $this->logger = $logger;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function collect(Request $request, Response $response, \Exception $exception = null)
-  {
-    $this->data = array(
-      'calls'    => null !== $this->logger ? $this->logger->calls : array(),
-    );
-  }
-
-  public function getReturnedErrorCount()
-  {
-    $errors = 0;
-    foreach ($this->data['calls'] as $call)
+    /**
+     * Class constructor
+     *
+     * @param ApiCallLoggerInterface $logger Logger object
+     */
+    public function __construct(ApiCallLoggerInterface $logger = null)
     {
-      $errors += $call['status']!='200 OK'?1:0;
+        $this->logger = $logger;
     }
-    return $errors;
-  }
-  
-  public function getCallCount()
-  {
-    return count($this->data['calls']);
-  }
 
-  public function getCalls()
-  {
-    return $this->data['calls'];
-  }
-
-  public function getTime()
-  {
-    $time = 0;
-    foreach ($this->data['calls'] as $call)
+    /**
+     * {@inheritdoc}
+     */
+    public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-      $time += $call['executionMS'];
+        $this->data = array(
+            'calls'        => null !== $this->logger ? $this->logger->calls : array(),
+        );
     }
-    return $time;
-  }
-  
-  /**
-   * {@inheritdoc}
-   */
-  public function getName()
-  {
-    return 'api';
-  }
+
+    /**
+     * Method counts amount of HTTP statuses, which is not equals to "200 OK"
+     *
+     * @return number
+     */
+    public function getReturnedErrorCount()
+    {
+        $errors = 0;
+        foreach ($this->data['calls'] as $call) {
+            $errors += $call['status']!='200 OK'?1:0;
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Method returns amount of logged API calls
+     *
+     * @return number
+     */
+    public function getCallCount()
+    {
+        return count($this->data['calls']);
+    }
+
+    /**
+     * Method returns all logged API call objects
+     *
+     * @return mixed
+     */
+    public function getCalls()
+    {
+        return $this->data['calls'];
+    }
+
+    /**
+     * Method calculates API calls execution time
+     *
+     * @return number
+     */
+    public function getTime()
+    {
+        $time = 0;
+        foreach ($this->data['calls'] as $call) {
+            $time += $call['executionMS'];
+        }
+
+        return $time;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'api';
+    }
 }

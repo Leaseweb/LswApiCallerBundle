@@ -11,12 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 *
 * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
 */
-
 class LswApiCallerBundle extends Bundle
 {
-  public function build(ContainerBuilder $container)
-  {
-    parent::build($container);
-    $container->registerExtension(new LswApiCallerExtension());
-  }
 }
