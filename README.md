@@ -15,7 +15,7 @@ Installation is broken down in the following steps:
 
 1. Download LswApiCallerBundle using composer
 2. Enable the Bundle
-3. Make sure php5-curl is installed (CURL module for php5)
+3. Make sure cURL is installed (cURL module for php5)
 
 ### Step 1: Download LswApiCallerBundle using composer
 
@@ -54,7 +54,7 @@ public function registerBundles()
 }
 ```
 
-### Step 3: Make sure php5-curl is installed
+### Step 3: Make sure cURL is installed
 
 On a Debian based distribution (like Ubuntu) the package is called "php5-curl" and
 can be installed using the following commands:
