@@ -15,7 +15,7 @@ Installation is broken down in the following steps:
 
 1. Download LswApiCallerBundle using composer
 2. Enable the Bundle
-3. Make sure cURL is installed (cURL module for php5)
+3. Make sure the cURL module in PHP is enabled
 
 ### Step 1: Download LswApiCallerBundle using composer
 
