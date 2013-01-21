@@ -54,7 +54,7 @@ public function registerBundles()
 }
 ```
 
-### Step 3: Make sure cURL is installed
+### Step 3: Make sure the cURL module in PHP is enabled
 
 On a Debian based distribution (like Ubuntu) the package is called "php5-curl" and
 can be installed using the following commands:
