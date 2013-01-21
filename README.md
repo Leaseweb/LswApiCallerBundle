@@ -24,7 +24,7 @@ Add LswGettextTranslationBundle in your composer.json:
 ```js
 {
     "require": {
-        "leaseweb/gettext-translation-bundle": "*"
+        "leaseweb/api-caller-bundle": "*"
     }
 }
 ```
@@ -32,7 +32,7 @@ Add LswGettextTranslationBundle in your composer.json:
 Now tell composer to download the bundle by running the command:
 
 ``` bash
-$ php composer.phar update leaseweb/gettext-translation-bundle
+$ php composer.phar update leaseweb/api-caller-bundle
 ```
 
 Composer will install the bundle to your project's `vendor/leaseweb` directory.
@@ -49,7 +49,7 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-        new Lsw\GettextTranslationBundle\LswGettextTranslationBundle(),
+        new Lsw\GettextTranslationBundle\LswApiCallerBundle(),
     );
 }
 ```
