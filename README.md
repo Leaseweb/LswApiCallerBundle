@@ -17,9 +17,9 @@ Installation is broken down in the following steps:
 2. Enable the Bundle
 3. Make sure php5-curl is installed (CURL module for php5)
 
-### Step 1: Download LswGettextTranslationBundle using composer
+### Step 1: Download LswApiCallerBundle using composer
 
-Add LswGettextTranslationBundle in your composer.json:
+Add LswApiCallerBundle in your composer.json:
 
 ```js
 {
@@ -49,7 +49,7 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-        new Lsw\GettextTranslationBundle\LswApiCallerBundle(),
+        new Lsw\ApiCallerBundle\LswApiCallerBundle(),
     );
 }
 ```
