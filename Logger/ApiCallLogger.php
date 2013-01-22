@@ -50,8 +50,9 @@ class ApiCallLogger implements ApiCallLoggerInterface
     /**
      * {@inheritdoc}
      */
-    public function stopCall(ApiCallInterface $call, $status)
+    public function stopCall(ApiCallInterface $call)
     {
+        $status = $call->getStatus();
         $responseData = $call->getResponseData();
         $responseObject = $call->getResponseObjectRepresentation();
         $executionMS = microtime(true) - $this->start;

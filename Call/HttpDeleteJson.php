@@ -1,12 +1,14 @@
 <?php
 namespace Lsw\ApiCallerBundle\Call;
 
+use Lsw\ApiCallerBundle\Helper\Curl;
+
 /**
  * cURL based API call with request data send as GET parameters
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
-class HttpDeleteJson extends ApiCall implements ApiCallInterface
+class HttpDeleteJson extends CurlCall implements ApiCallInterface
 {
     /**
     * {@inheritdoc}
@@ -27,11 +29,11 @@ class HttpDeleteJson extends ApiCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function makeRequest($curlHandle, $options)
+    public function makeRequest($curl, $options)
     {
-        curl_setopt($curlHandle, CURLOPT_URL, $this->url.'?'.$this->requestData);
-        curl_setopt($curlHandle, CURLOPT_CUSTOMREQUEST, 'DELETE');
-        curl_setopt_array($curlHandle, $options);
-        $this->responseData = curl_exec($curlHandle);
+        $curl->setopt(CURLOPT_URL, $this->url.'?'.$this->requestData);
+        $curl->setopt(CURLOPT_CUSTOMREQUEST, 'DELETE');
+        $curl->setoptArray($options);
+        $this->responseData = $curl->exec();
     }
 }

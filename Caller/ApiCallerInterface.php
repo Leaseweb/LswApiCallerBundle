@@ -22,6 +22,8 @@ interface ApiCallerInterface
 
     /**
      * Method returns last status
+     *
+     * @return string Last status
      */
     public function getLastStatus();
 

@@ -1,12 +1,14 @@
 <?php
 namespace Lsw\ApiCallerBundle\Call;
 
+use Lsw\ApiCallerBundle\Helper\Curl;
+
 /**
  * cURL based API call with request data send as GET parameters
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
-class HttpGetHtml extends ApiCall implements ApiCallInterface
+class HttpGetHtml extends CurlCall implements ApiCallInterface
 {
     /**
      * ApiCall class constructor
@@ -43,16 +45,16 @@ class HttpGetHtml extends ApiCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function makeRequest($curlHandle, $options)
+    public function makeRequest($curl, $options)
     {
         $url = $this->url;
         if ($this->requestData) {
                 $url.= $this->requestData;
         }
-        curl_setopt($curlHandle, CURLOPT_URL, $url);
-        curl_setopt($curlHandle, CURLOPT_COOKIE, $this->cookie);
-        curl_setopt_array($curlHandle, $options);
-        $this->responseData = curl_exec($curlHandle);
+        $curl->setopt(CURLOPT_URL, $url);
+        $curl->setopt(CURLOPT_COOKIE, $this->cookie);
+        $curl->setoptArray($options);
+        $this->responseData = $curl->exec();
     }
 
 }

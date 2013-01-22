@@ -1,6 +1,7 @@
 parameters:
-    api_caller.curl.options:
+    api_caller.options:
         timeout: 10
         ssl_verifypeer: false
         useragent: "LeaseWeb API Caller"
         followlocation: true
+        sslversion: 3

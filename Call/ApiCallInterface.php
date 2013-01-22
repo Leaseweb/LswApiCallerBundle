@@ -53,26 +53,20 @@ interface ApiCallInterface
     /**
      * Get the HTTP status of the API call
      */
+    public function getStatusCode();
+
+    /**
+     * Get the HTTP status of the API call
+     */
     public function getStatus();
 
     /**
-     * Generate the request parameter data
-     */
-    public function generateRequestData();
-
-    /**
-     * Parse the request response data
-     */
-    public function parseResponseData();
-
-    /**
-     * Method that makes the actual cURL request
+     * Execute the call
      *
-     * @param resource $curlHandle cURL handle
-     * @param array    $options    cURL options array
+     * @param array $options Array of options
      *
-     * @see \Lsw\ApiCallerBundle\Call\ApiCall::makeRequest()
+     * @return mixed Response
      */
-    public function makeRequest($curlHandle, $options);
+    public function execute($options);
 
 }

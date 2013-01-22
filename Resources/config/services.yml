@@ -1,20 +1,20 @@
 parameters:
-    api_caller.curl.class: Lsw\ApiCallerBundle\Caller\CurlApiCaller
-    api_caller.logger.class: Lsw\ApiCallerBundle\Logger\ApiCallLogger
-    data_collector.api_caller.class: Lsw\ApiCallerBundle\DataCollector\ApiCallDataCollector
-    data_collector.api_caller.template: "LswApiCallerBundle:Collector:api"
+    api_caller.class: Lsw\ApiCallerBundle\Caller\LoggingApiCaller
+    api_call_logger.class: Lsw\ApiCallerBundle\Logger\ApiCallLogger
+    api_caller.data_collector.class: Lsw\ApiCallerBundle\DataCollector\ApiCallDataCollector
+    api_caller.data_collector.template: "LswApiCallerBundle:Collector:api"
 
 services:
-    api_caller.curl:
-        class: %api_caller.curl.class%
-        arguments: [%api_caller.curl.options%,@api_caller.logger]
-    api_caller.logger:
-        class: %api_caller.logger.class%
+    api_caller:
+        class: %api_caller.class%
+        arguments: [%api_caller.options%,@api_call_logger]
+    api_call_logger:
+        class: %api_call_logger.class%
         arguments: [@logger]
         tags:
             - { name: monolog.logger, channel:api_caller }
-    data_collector.api_caller:
-        class: %data_collector.api_caller.class%
-        arguments: [@api_caller.logger]
+    api_caller.data_collector:
+        class: %api_caller.data_collector.class%
+        arguments: [@api_call_logger]
         tags:
-            - { name: data_collector, template: %data_collector.api_caller.template%, id:"api"}
+            - { name: data_collector, template: %api_caller.data_collector.template%, id:"api"}
