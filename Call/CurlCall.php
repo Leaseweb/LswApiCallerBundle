@@ -28,6 +28,7 @@ abstract class CurlCall implements ApiCallInterface
     {
         $this->url = $url;
         $this->requestObject = $requestObject;
+        $this->generateRequestData();
     }
 
     /**
@@ -174,7 +175,6 @@ abstract class CurlCall implements ApiCallInterface
     public function execute($options)
     {
         $curl = new Curl();
-        $this->generateRequestData();
         $options['returntransfer']=true;
         $options = $this->parseCurlOptions($options);
         $this->makeRequest($curl, $options);
