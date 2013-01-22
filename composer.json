@@ -1,0 +1,37 @@
+{
+    "name": "leaseweb/api-caller-bundle",
+    "type": "symfony-bundle",
+    "description": "LeaseWeb LswApiCallerBundle",
+    "keywords": ["API","cURL","Symfony2"],
+    "homepage": "http://www.leaseweblabs.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maurits van der Schee",
+            "email": "m.vanderschee@leaseweb.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": ">=2.1,<2.3-dev",
+        "symfony/security-bundle": ">=2.1,<2.3-dev"
+    },
+    "require-dev": {
+        "twig/twig": "*",
+        "doctrine/doctrine-bundle": "*",
+        "swiftmailer/swiftmailer": "*",
+        "willdurand/propel-typehintable-behavior": "dev-master",
+        "symfony/yaml": "2.1.*",
+        "symfony/validator": "2.1.*"
+    },
+    "autoload": {
+        "psr-0": { "Lsw\\ApiCallerBundle": "" }
+    },
+    "target-dir": "Lsw/ApiCallerBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
