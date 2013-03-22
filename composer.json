@@ -1,7 +1,7 @@
 {
     "name": "leaseweb/api-caller-bundle",
     "type": "symfony-bundle",
-    "description": "LeaseWeb LswApiCallerBundle",
+    "description": "cURL API call functionality with full Web Debug Toolbar integration",
     "keywords": ["API","cURL","Symfony2"],
     "homepage": "http://www.leaseweblabs.com",
     "license": "MIT",
