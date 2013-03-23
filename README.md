@@ -29,7 +29,7 @@ Add LswApiCallerBundle in your composer.json:
 ```js
 {
     "require": {
-        "leaseweb/api-caller-bundle": "*"
+        "leaseweb/api-caller-bundle": "1.0.*@dev"
     }
 }
 ```
