@@ -2,7 +2,7 @@
 
 {% block toolbar %}
     {% set icon %}
-        <img width="20" height="28" alt="API" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAcCAYAAABh2p9gAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wLDw87Hzx98kMAAAAZdEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAABe0lEQVRIx+2VzyvDcRjHX58vJs3XrySTiUkODhbNkFp+zLabC8pFJDf/AFGIFOXqoJYfB/MzF0mSgxLiIGtGidMK7bI2v7bmIpSNlDTNc3yenlfv593z9AiXy8VPRqwQIrKBEj8ckT+yMBgMwYj28M8BBXJFP6vrVlo1cW9puYqxtXVW5m0sLC0xM9qBLkUCuYpR2wA6ZTigSKLYksvVYYDKajWKd6WgZ5/htmYamzqZcNfS1VJA/FcKpWQtFrWDWesaD/o6chQhOgJuTnZdKHPTiP0cKJFSYibLuYH9cpetuzKMeR81CIUKfU02nvMbnkIt9hsvlVKTilObE6//nr1tL0NGDVang3tAyGX0Ti/yhJ/b42XG5i54JDM8UErTYSnKJL9nisUgICWQ+Ggif9KB/cXDwfY+DrzvuuWwCiXS9SbSd7ppGTnCCxCjomF8BHNBAvbL765NTAbl9RmcbTp5FRC4Zm/Lg9ZSiPL/ln8VKHw+X5S9gCh8o89GYm0IsAZIJwAAAABJRU5ErkJggg==" />
+        <img width="22" height="28" alt="API" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAcCAYAAABlL09dAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90DGRcZFJB2DwQAAAAZdEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAACjUlEQVRIx+2Wz0tUURTHP/e+N/PGxpkMbGZcaLgIV46SgUIMtGhhWkKgtOhPEI0QA42YKPoLivZtConSCg3aBLWQdJY6gy2qhSk0pL4Z3xgz8+a2KKdm5jn9GFsEXXiLc+67X875nu+558L/9beXGB0ZkanNrZOmaXbZhUK+FjCllDjo92frffV39Y1PGw3m1uZzy8poQoiaI7UsixZXiyY7Ojt8IDQhBPv1BULBHik1bd/59XjqNF2hnLgCQNc0hJR7EUretlFKUU6hUkrpTqBKKYKhEH19ffh8PkfcQsEmFoux8HrBEVx3OnSooYGJyQnaw+GqKZ/u7+fm9RvMz89X7FXkKYTg3OAg7eEwiUSCy+NjFYd2/R6Ph4krkxhud5E+R2ClFLquM3R+CIDtdIqlpaUK4B/9B7xezg4MkMvl9gYuFGyOtrXhdrl349+jeKX+E5EItp2vFjGEgsGinc/n2E6nK2DL/YHAYQqFKlQIASnTLNrHuo4zNfUAgEzGIplMAhDu6OTho5nif6ZpVqiiBFhKjXh8uWgbhkGoqQnLshgfGyMSifBmZQWv10tjY2OxYIuLMfSyRpPlitjZ+czc7GyJprPZLOvr6wCsrq4W94QQ5PI5nj55jO5y/VzHU/fu0x4O09zcDIDf7+dqNEo6lS5qezf1O7duk/yYRJYV2bHzPqytcS0aZXh4mOC3YgYCQQKBIBnLImNZ5PM2M9PTPJudw+lW1J0aBOD923dcGr1YIfySwy4dKbVfA/5eSInbMP74hpOovzGYFPpX0lXVlH9zPCGklPqR1tadU729JJaX0aRWY5wKl+6iu6c7IV68euk2DCNa5/GcEVJmax3Otm3n4vH4hX/vXfEF9vYDLdA03HYAAAAASUVORK5CYII=" />
         <span class="sf-toolbar-status{% if 5 < collector.callcount %} sf-toolbar-status-yellow{% endif %}">{{ collector.callcount }}</span>
         {% if collector.callcount > 0 %}
             <span class="sf-toolbar-info-piece-additional-detail">in {{ '%0.2f'|format(collector.time * 1000) }} ms</span>
@@ -31,7 +31,7 @@
 {% block menu %}
 <span class="label">
     <span class="icon">
-      <span style="display:block; float: left; background-color: #3F3F3F; color: #F7F7F7; font-family: sans-serif; font-size: 15px; padding: 4px 4px 3px 4px; margin: 3px 15px;">API</span>
+      <img width="32" height="36" alt="API" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAkCAYAAADo6zjiAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90DGRcZIl/Mmp0AAAAZdEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAAC/klEQVRYw+1YTU8TURQ9d2beJKWhsphx0Y9EdrUkSlLBDS7UhRFNNCJ707oUiEsSFy7VhSGoUUR0YULkD7hSE1P5KAYpW9wUNoK0E9pSS9vpPBektdiZMiWExsgks5r37jvv3HPPffOA//2hwYGBO6vx+ONiUWdEdHgLE9B2rO099d/o0zVNE5vFgGSUSuIOImoKAKHZGjgC0HQAkr2SIbjdbgg2hcoBJJNJZLNZCIKwfwCcc+RyOYw8GUUwGGyoUtLpNO4ODmElHocgivtLgSgIGJ94ha6uLhCR7RcAXC4XXoy/hNvjgWEYjQMoFovo67+JQEcHOOe7ds85t2Ss2lNkWcbos6fI57ct54gBv//+dj5fs4CqHseDRw8rAXVdRyAQgEBAd/dZS634/X78ym6hp+ccOOdwOBxgTMZSLGaaQksGQuGQuWikvXVbHkNE4Jzj/MULkBmznwImSfCf9FvS1ljTIXi9XjidTtN4pgAkxqCo6oH2h1Odp1EqlewBICI4nc4DNZwT7e2m1WAJwJrT+sYiWsxnjAEmKZDMy8lAoVCALMt/AosiIpGIJTPlUv38JQKHo6Xm+9raOsjEFU23U9JLSCaSu0RDRFBVFS0tO8E1TUM4dAu9ly/h08cPFcUrimoKcnFhAaKJI5oCKBSLWF1dqZuKsbHniC0uYuPnBoYGB+qmTtM0JBIJ+z7AOcfUu6m6rrf2Yx2ost5MJmPpjEuxGAqFgn0ARITo3Bzm56IVav9+ZCZBlmUwxiAzZtopywuOjoxYboT6rl3nm6lUDTrOOVyuVrydnKzkvXpMIpHAdi5Xab8ej2dX6y2L8t7wMKanZywdVKjnYKlUGrfDYWxlMjUAFUWB1+eD1+eDz+er6fuGYeDNxGvMzszWtW9LBqoDuVyt6L1yFaJk7/TOOfA1GsX35WWQINQV854AynTqut6Q84miuOdpqKEjGbPoZken4n8fQLP+CcviFjrPBHkzQOw0LgU0/21hQlXU0KFfTBCwmUr9avoNyW/CBR1Laux/zQAAAABJRU5ErkJggg==" />
     </span>
     <strong>CALLS</strong>
     <span class="count">
@@ -62,10 +62,10 @@
                           <a href="data:text/plain;,{{ call.requestObject|url_encode(true) }}">parsed</a>
                           <br />
                         <strong>Response</strong>: {{ call.responseData|length }} bytes
-                          <a href="data:text/plain;,{{ call.responseData|url_encode(true) }}">raw</a> 
-                          <a href="data:text/html;,{{ call.responseData|url_encode(true) }}">html</a> 
+                          <a href="data:text/plain;,{{ call.responseData|url_encode(true) }}">raw</a>
+                          <a href="data:text/html;,{{ call.responseData|url_encode(true) }}">html</a>
                           <a href="data:text/plain;,{{ call.responseObject|url_encode(true) }}">parsed</a>
-                          <br /> 
+                          <br />
                     </div>
                     <small>
                         <strong>Time</strong>: {{ '%0.2f'|format(call.executionMS * 1000) }} ms
