@@ -3,11 +3,10 @@ namespace Lsw\ApiCallerBundle\Call;
 
 /**
  * cURL based API call with request data send as POST parameters
- * Response is parsed as JSON
  *
- * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
+ * @author Andrii Shchurkov <a.shchurkov@leaseweb.com>
  */
-class HttpPostJson extends CurlCall implements ApiCallInterface
+class HttpPost extends CurlCall implements ApiCallInterface
 {
     /**
     * {@inheritdoc}
@@ -22,7 +21,7 @@ class HttpPostJson extends CurlCall implements ApiCallInterface
      */
     public function parseResponseData()
     {
-        $this->responseObject = json_decode($this->responseData);
+        $this->responseObject = $this->responseData;
     }
 
     /**
