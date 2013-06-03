@@ -23,7 +23,7 @@ class HttpGetJson extends CurlCall implements ApiCallInterface
      */
     public function parseResponseData()
     {
-        $this->responseObject = json_decode($this->responseData);
+        $this->responseObject = json_decode($this->responseData,$this->asAssociativeArray);
     }
 
     /**

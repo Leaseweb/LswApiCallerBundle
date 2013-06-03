@@ -17,6 +17,7 @@ abstract class CurlCall implements ApiCallInterface
     protected $responseData;
     protected $responseObject;
     protected $status;
+    protected $asAssociativeArray;
 
     /**
      * Class constructor
@@ -24,10 +25,11 @@ abstract class CurlCall implements ApiCallInterface
      * @param string $url           API url
      * @param object $requestObject Request
      */
-    public function __construct($url,$requestObject)
+    public function __construct($url,$requestObject,$asAssociativeArray=false)
     {
         $this->url = $url;
         $this->requestObject = $requestObject;
+        $this->asAssociativeArray = $asAssociativeArray;
         $this->generateRequestData();
     }
 
@@ -240,7 +242,7 @@ abstract class CurlCall implements ApiCallInterface
 
         public function parseResponseData()
         {
-        \$this->responseObject = json_decode(\$this->responseData);
+        \$this->responseObject = json_decode(\$this->responseData,\$this->asAssociativeArray);
         }
 
         ");
