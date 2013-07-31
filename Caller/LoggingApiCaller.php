@@ -1,6 +1,7 @@
 <?php
 namespace Lsw\ApiCallerBundle\Caller;
 
+use Lsw\ApiCallerBundle\Helper\Curl;
 use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
 use Lsw\ApiCallerBundle\Call\ApiCallInterface;
 
@@ -14,6 +15,7 @@ class LoggingApiCaller implements ApiCallerInterface
     private $options;
     private $logger;
     private $lastCall;
+    private $curl;
 
     /**
      * Constructor creates dependency objects
@@ -27,6 +29,7 @@ class LoggingApiCaller implements ApiCallerInterface
     {
         $this->options = $options;
         $this->logger = $logger;
+        $this->curl = null;
     }
 
     /**
@@ -48,13 +51,21 @@ class LoggingApiCaller implements ApiCallerInterface
      */
     public function call(ApiCallInterface $call)
     {
+        if ($this->options['fresh_connect'] || $this->curl == null) {
+            $this->curl = new Curl();
+        }
+
         if ($this->logger) {
             $this->logger->startCall($call);
         }
         $this->lastCall = $call;
-        $result = $call->execute($this->options);
+        $result = $call->execute($this->options, $this->curl);
         if ($this->logger) {
             $this->logger->stopCall($call);
+        }
+
+        if ($this->options['fresh_connect']) {
+            $this->curl->close();
         }
 
         return $result;

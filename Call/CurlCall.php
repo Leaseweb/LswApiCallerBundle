@@ -174,15 +174,13 @@ abstract class CurlCall implements ApiCallInterface
      *
      * @return mixed Response
      */
-    public function execute($options)
+    public function execute($options, Curl $curl)
     {
-        $curl = new Curl();
         $options['returntransfer']=true;
         $options = $this->parseCurlOptions($options);
         $this->makeRequest($curl, $options);
         $this->parseResponseData();
         $this->status = $curl->getinfo(CURLINFO_HTTP_CODE);
-        $curl->close();
         $result = $this->getResponseObject();
 
         return $result;

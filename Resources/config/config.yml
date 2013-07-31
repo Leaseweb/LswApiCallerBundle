@@ -5,3 +5,4 @@ parameters:
         useragent: "LeaseWeb API Caller"
         followlocation: true
         sslversion: 3
+        fresh_connect: false

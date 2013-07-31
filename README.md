@@ -119,6 +119,20 @@ class SomeController extends Controller
 
 ```
 
+## Configuration
+
+By default it uses these cURL options:
+``` yaml
+parameters:
+    api_caller.options:
+        timeout: 10  # maximum transport + execution duration of the call in sec.
+        ssl_verifypeer: false  # to stop cURL from verifying the peer's certificate.
+        useragent: "LeaseWeb API Caller"  # contents of the "User-Agent: " header.
+        followlocation: true  # to follow any "Location: " header that the server sends.
+        sslversion: 3  # set to 3 to avoid any bugs that relate to automatic version selection.
+        fresh_connect: false  # set to true to force full reconnect every call.
+```
+
 ## License
 
 This bundle is under the MIT license.

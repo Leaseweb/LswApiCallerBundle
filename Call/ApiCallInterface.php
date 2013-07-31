@@ -1,5 +1,6 @@
 <?php
 namespace Lsw\ApiCallerBundle\Call;
+use Lsw\ApiCallerBundle\Helper\Curl;
 
 /**
  * Interface of cURL based API Call
@@ -67,6 +68,6 @@ interface ApiCallInterface
      *
      * @return mixed Response
      */
-    public function execute($options);
+    public function execute($options, Curl $curl);
 
 }
