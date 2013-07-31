@@ -16,6 +16,7 @@ class LoggingApiCaller implements ApiCallerInterface
     private $logger;
     private $lastCall;
     private $curl;
+    private $freshConnect;
 
     /**
      * Constructor creates dependency objects
@@ -30,6 +31,7 @@ class LoggingApiCaller implements ApiCallerInterface
         $this->options = $options;
         $this->logger = $logger;
         $this->curl = null;
+        $this->freshConnect = isset($this->options['fresh_connect']) ? $this->options['fresh_connect'] : false;
     }
 
     /**
@@ -51,7 +53,7 @@ class LoggingApiCaller implements ApiCallerInterface
      */
     public function call(ApiCallInterface $call)
     {
-        if ($this->options['fresh_connect'] || $this->curl == null) {
+        if ($this->freshConnect || $this->curl == null) {
             $this->curl = new Curl();
         }
 
@@ -64,7 +66,7 @@ class LoggingApiCaller implements ApiCallerInterface
             $this->logger->stopCall($call);
         }
 
-        if ($this->options['fresh_connect']) {
+        if ($this->freshConnect) {
             $this->curl->close();
         }
 
