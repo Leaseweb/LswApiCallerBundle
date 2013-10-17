@@ -3,6 +3,7 @@ namespace Lsw\ApiCallerBundle\Caller;
 
 use Lsw\ApiCallerBundle\Helper\Curl;
 use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
+use Lsw\ApiCallerBundle\Call\CurlCall;
 use Lsw\ApiCallerBundle\Call\ApiCallInterface;
 
 /**
@@ -15,7 +16,7 @@ class LoggingApiCaller implements ApiCallerInterface
     private $options;
     private $logger;
     private $lastCall;
-    private $curl;
+    private $engine;
     private $freshConnect;
 
     /**
@@ -30,7 +31,7 @@ class LoggingApiCaller implements ApiCallerInterface
     {
         $this->options = $options;
         $this->logger = $logger;
-        $this->curl = null;
+        $this->engine = null;
         $this->freshConnect = isset($this->options['fresh_connect']) ? $this->options['fresh_connect'] : false;
     }
 
@@ -53,21 +54,29 @@ class LoggingApiCaller implements ApiCallerInterface
      */
     public function call(ApiCallInterface $call)
     {
-        if ($this->freshConnect || $this->curl == null) {
-            $this->curl = new Curl();
+        if ($call instanceof CurlCall) {
+            if ($this->freshConnect || $this->engine == null) {
+                $this->engine = new Curl();
+            }
+        } else {
+            if ($this->freshConnect || $this->engine == null) {
+                $this->engine = new \SoapClient($call->getUrl());
+            }
         }
 
         if ($this->logger) {
             $this->logger->startCall($call);
         }
         $this->lastCall = $call;
-        $result = $call->execute($this->options, $this->curl);
+        $result = $call->execute($this->options, $this->engine, $this->freshConnect);
         if ($this->logger) {
             $this->logger->stopCall($call);
         }
 
-        if ($this->freshConnect) {
-            $this->curl->close();
+        if ($call instanceof CurlCall) {
+            if ($this->freshConnect) {
+                $this->engine->close();
+            }
         }
 
         return $result;

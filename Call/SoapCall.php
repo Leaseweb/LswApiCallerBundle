@@ -4,11 +4,11 @@ namespace Lsw\ApiCallerBundle\Call;
 use Lsw\ApiCallerBundle\Helper\Curl;
 
 /**
- * cURL based API Call
+ * Soap based API Call
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
-abstract class CurlCall implements ApiCallInterface
+abstract class SoapCall implements ApiCallInterface
 {
     protected $url;
     protected $name;
@@ -18,6 +18,8 @@ abstract class CurlCall implements ApiCallInterface
     protected $responseObject;
     protected $status;
     protected $asAssociativeArray;
+
+    protected $call;
 
     /**
      * Class constructor
@@ -32,6 +34,16 @@ abstract class CurlCall implements ApiCallInterface
         $this->requestObject = $requestObject;
         $this->asAssociativeArray = $asAssociativeArray;
         $this->generateRequestData();
+    }
+
+    /**
+     * Set call name
+     *
+     * @param object $call Name of the call
+     */
+    public function setCall($call)
+    {
+        $this->call = $call;
     }
 
     /**
@@ -119,46 +131,8 @@ abstract class CurlCall implements ApiCallInterface
     {
         $code = $this->getStatusCode();
         $codes = array(
-                0   => 'Connection failed',
-                100 => 'Continue',
-                101 => 'Switching Protocols',
                 200 => 'OK',
-                201 => 'Created',
-                202 => 'Accepted',
-                203 => 'Non-Authoritative Information',
-                204 => 'No Content',
-                205 => 'Reset Content',
-                206 => 'Partial Content',
-                300 => 'Multiple Choices',
-                301 => 'Moved Permanently',
-                302 => 'Found',
-                303 => 'See Other',
-                304 => 'Not Modified',
-                305 => 'Use Proxy',
-                307 => 'Temporary Redirect',
-                400 => 'Bad Request',
-                401 => 'Unauthorized',
-                403 => 'Forbidden',
-                404 => 'Not Found',
-                405 => 'Method Not Allowed',
-                406 => 'Not Acceptable',
-                407 => 'Proxy Authentication Required',
-                408 => 'Request Timeout',
-                409 => 'Conflict',
-                410 => 'Gone',
-                411 => 'Length Required',
-                412 => 'Precondition Failed',
-                413 => 'Request Entity Too Large',
-                414 => 'Request URI Too Long',
-                415 => 'Unsupported Media Type',
-                416 => 'Requested Range Not Satisfiable',
-                417 => 'Expectation Failed',
-                500 => 'Internal Server Error',
-                501 => 'Not Implemented',
-                502 => 'Bad Gateway',
-                503 => 'Service Unavailable',
-                504 => 'Gateway Timeout',
-                505 => 'HTTP Version Not Supported',
+                500 => 'Error',
         );
 
         if (isset($codes[$code])) {
@@ -179,42 +153,11 @@ abstract class CurlCall implements ApiCallInterface
      */
     public function execute($options, $engine, $freshConnect = false)
     {
-        $options['returntransfer']=true;
-        $options = $this->parseCurlOptions($options);
         $this->makeRequest($engine, $options);
         $this->parseResponseData();
-        $this->status = $engine->getinfo(CURLINFO_HTTP_CODE);
         $result = $this->getResponseObject();
 
         return $result;
-    }
-
-    /**
-     * Private method to parse cURL options from the bundle config.
-     * If some option is not defined an exception will be thrown.
-     *
-     * @param array $config ApiCallerBundle configuration
-     *
-     * @throws \Exception Specified cURL option can't be found
-     *
-     * @return array
-     */
-    private function parseCurlOptions($config)
-    {
-        $options = array();
-        $prefix = 'CURLOPT_';
-        foreach ($config as $key => $value) {
-            $constantName = $prefix . strtoupper($key);
-            if (!defined($constantName)) {
-                $messageTemplate  = "Invalid option '%s' in apicaller.config parameter. ";
-                $messageTemplate .= "Use options (from the cURL section in the PHP manual) without prefix '%s'";
-                $message = sprintf($messageTemplate, $key, $prefix);
-                throw new \Exception($message);
-            }
-            $options[constant($constantName)] = $value;
-        }
-
-        return $options;
     }
 
     /**
@@ -252,16 +195,15 @@ abstract class CurlCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function makeRequest($curl, $options)
+    public function makeRequest($soap)
     {
         $class = get_class($this);
         throw new \Exception("Class $class must implement method 'makeRequest'. Hint:
 
-        public function makeRequest(\$curl, \$options)
+        public function makeRequest(\$soap)
         {
-        \$curl->setopt(CURLOPT_URL, \$this->url.'?'.\$this->requestData);
-        \$curl->setoptArray(\$options);
-        \$this->responseData = \$curl->exec();
+        \$soap->__setLocation(\$this->url);
+        \$this->responseData = json_encode(\$soap->__call(\$this->call, array(\$this->requestObject)));
         }
 
         ");

@@ -9,6 +9,8 @@ use Lsw\ApiCallerBundle\Helper\Curl;
  */
 interface ApiCallInterface
 {
+    public function __construct($url,$requestObject,$asAssociativeArray=false);
+
     /**
      * Get the URL of the call
      */
@@ -64,10 +66,12 @@ interface ApiCallInterface
     /**
      * Execute the call
      *
-     * @param array $options Array of options
+     * @param array  $options      Array of options
+     * @param object $engine       Calling engine
+     * @param bool   $freshConnect Make a fresh connection every call
      *
      * @return mixed Response
      */
-    public function execute($options, Curl $curl);
+    public function execute($options, $engine, $freshConnect);
 
 }
