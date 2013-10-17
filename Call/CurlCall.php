@@ -199,7 +199,7 @@ abstract class CurlCall implements ApiCallInterface
      *
      * @return array
      */
-    private function parseCurlOptions($config)
+    protected function parseCurlOptions($config)
     {
         $options = array();
         $prefix = 'CURLOPT_';
