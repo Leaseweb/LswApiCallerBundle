@@ -18,6 +18,8 @@ abstract class CurlCall implements ApiCallInterface
     protected $responseObject;
     protected $status;
     protected $asAssociativeArray;
+    protected $engine;
+    protected $curlOptions;
 
     /**
      * Class constructor
@@ -32,6 +34,8 @@ abstract class CurlCall implements ApiCallInterface
         $this->requestObject = $requestObject;
         $this->asAssociativeArray = $asAssociativeArray;
         $this->generateRequestData();
+
+        $this->engine = new Curl();
     }
 
     /**
@@ -172,21 +176,43 @@ abstract class CurlCall implements ApiCallInterface
      * Execute the call
      *
      * @param array  $options      Array of options
-     * @param object $engine       Calling engine
-     * @param bool   $freshConnect Make a fresh connection every call
      *
      * @return mixed Response
      */
-    public function execute($options, $engine, $freshConnect = false)
+    public function execute($options = array())
     {
-        $options['returntransfer']=true;
-        $options = $this->parseCurlOptions($options);
-        $this->makeRequest($engine, $options);
-        $this->parseResponseData();
-        $this->status = $engine->getinfo(CURLINFO_HTTP_CODE);
+        $this->setCurlOptions($options);
+        $this->makeRequest();
+
+        $this->status = $this->engine->getinfo(CURLINFO_HTTP_CODE);
+
         $result = $this->getResponseObject();
 
+        $this->clearCurlOptions();
+
         return $result;
+    }
+
+    /**
+     * Clearing curl options so they will not transfer to the next request
+     */
+    protected function clearCurlOptions()
+    {
+        foreach($this->curlOptions as $key => $option) {
+            $this->curlOptions[$key] = null;
+        }
+        $this->engine->setoptArray($this->curlOptions);
+    }
+
+    /**
+     * Set curl options
+     *
+     * @param array $options
+     */
+    protected function setCurlOptions($options = array())
+    {
+        $this->curlOptions = $this->parseCurlOptions($options);
+        $this->engine->setoptArray($this->curlOptions);
     }
 
     /**
@@ -222,49 +248,15 @@ abstract class CurlCall implements ApiCallInterface
      */
     public function generateRequestData()
     {
-        $class = get_class($this);
-        throw new \Exception("Class $class must implement method 'generateRequestData'. Hint:
-
-        public function generateRequestData()
-        {
-        \$this->requestData = http_build_query(\$this->requestObject);
-        }
-
-        ");
+        $this->requestData = http_build_query($this->requestObject);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function parseResponseData()
+    public function makeRequest()
     {
-        $class = get_class($this);
-        throw new \Exception("Class $class must implement method 'parseResponseData'. Hint:
-
-        public function parseResponseData()
-        {
-        \$this->responseObject = json_decode(\$this->responseData,\$this->asAssociativeArray);
-        }
-
-        ");
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function makeRequest($curl, $options)
-    {
-        $class = get_class($this);
-        throw new \Exception("Class $class must implement method 'makeRequest'. Hint:
-
-        public function makeRequest(\$curl, \$options)
-        {
-        \$curl->setopt(CURLOPT_URL, \$this->url.'?'.\$this->requestData);
-        \$curl->setoptArray(\$options);
-        \$this->responseData = \$curl->exec();
-        }
-
-        ");
+        $this->responseData = $this->engine->exec();
     }
 
 }

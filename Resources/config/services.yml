@@ -8,6 +8,7 @@ services:
     api_caller:
         class: %api_caller.class%
         arguments: [%api_caller.options%,@api_call_logger]
+        scope: prototype
     api_call_logger:
         class: %api_call_logger.class%
         arguments: [@logger]

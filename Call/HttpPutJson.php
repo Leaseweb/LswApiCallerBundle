@@ -8,35 +8,16 @@ use Lsw\ApiCallerBundle\Helper\Curl;
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
-class HttpPutJson extends CurlCall implements ApiCallInterface
+class HttpPutJson extends HttpPostJson implements ApiCallInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function generateRequestData()
+    public function setCurlOptions($options = array())
     {
-        $this->requestData = http_build_query($this->requestObject);
-    }
+        $params = array();
+        $params['customrequest'] = 'put';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function parseResponseData()
-    {
-        $this->responseObject = json_decode($this->responseData,$this->asAssociativeArray);
+        return parent::setCurlOptions(array_merge($params, $options));
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function makeRequest($curl, $options)
-    {
-        $curl->setopt(CURLOPT_URL, $this->url);
-        $curl->setopt(CURLOPT_POST, 1);
-        $curl->setopt(CURLOPT_POSTFIELDS, $this->requestData);
-        $curl->setopt(CURLOPT_CUSTOMREQUEST, "PUT");
-        $curl->setoptArray($options);
-        $this->responseData = $curl->exec();
-    }
-
 }

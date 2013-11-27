@@ -8,16 +8,8 @@ use Lsw\ApiCallerBundle\Helper\Curl;
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
-class HttpGetJson extends CurlCall implements ApiCallInterface
+class HttpGetJson extends LegacyCurlCall implements ApiCallInterface
 {
-    /**
-    * {@inheritdoc}
-    */
-    public function generateRequestData()
-    {
-        $this->requestData = http_build_query($this->requestObject);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -25,15 +17,4 @@ class HttpGetJson extends CurlCall implements ApiCallInterface
     {
         $this->responseObject = json_decode($this->responseData,$this->asAssociativeArray);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function makeRequest($curl, $options)
-    {
-        $curl->setopt(CURLOPT_URL, $this->url.'?'.$this->requestData);
-        $curl->setoptArray($options);
-        $this->responseData = $curl->exec();
-    }
-
 }

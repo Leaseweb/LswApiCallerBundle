@@ -7,16 +7,8 @@ namespace Lsw\ApiCallerBundle\Call;
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
-class HttpPostJson extends CurlCall implements ApiCallInterface
+class HttpPostJson extends HttpPost implements ApiCallInterface
 {
-    /**
-    * {@inheritdoc}
-    */
-    public function generateRequestData()
-    {
-        $this->requestData = http_build_query($this->requestObject);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -24,17 +16,4 @@ class HttpPostJson extends CurlCall implements ApiCallInterface
     {
         $this->responseObject = json_decode($this->responseData,$this->asAssociativeArray);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function makeRequest($curl, $options)
-    {
-        $curl->setopt(CURLOPT_URL, $this->url);
-        $curl->setopt(CURLOPT_POST, 1);
-        $curl->setopt(CURLOPT_POSTFIELDS, $this->requestData);
-        $curl->setoptArray($options);
-        $this->responseData = $curl->exec();
-    }
-
 }

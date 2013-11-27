@@ -146,17 +146,16 @@ abstract class SoapCall implements ApiCallInterface
      * Execute the call
      *
      * @param array  $options      Array of options
-     * @param object $engine       Calling engine
-     * @param bool   $freshConnect Make a fresh connection every call
      *
      * @return mixed Response
      */
-    public function execute($options, $engine, $freshConnect = false)
+    public function execute($options)
     {
-        $this->makeRequest($engine, $options);
+        $this->makeRequest($options);
         $this->parseResponseData();
         $result = $this->getResponseObject();
 
+        $this->engine = new \SoapClient($this->getUrl());
         return $result;
     }
 

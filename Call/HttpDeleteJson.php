@@ -8,16 +8,8 @@ use Lsw\ApiCallerBundle\Helper\Curl;
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
-class HttpDeleteJson extends CurlCall implements ApiCallInterface
+class HttpDeleteJson extends LegacyCurlCall implements ApiCallInterface
 {
-    /**
-    * {@inheritdoc}
-    */
-    public function generateRequestData()
-    {
-        $this->requestData = http_build_query($this->requestObject);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -29,11 +21,11 @@ class HttpDeleteJson extends CurlCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function makeRequest($curl, $options)
+    public function setCurlOptions($options = array())
     {
-        $curl->setopt(CURLOPT_URL, $this->url.'?'.$this->requestData);
-        $curl->setopt(CURLOPT_CUSTOMREQUEST, 'DELETE');
-        $curl->setoptArray($options);
-        $this->responseData = $curl->exec();
+        $params = array();
+        $params['customrequest'] = 'delete';
+
+        return parent::setCurlOptions(array_merge($params, $options));
     }
 }

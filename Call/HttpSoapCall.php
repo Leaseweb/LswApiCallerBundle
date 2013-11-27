@@ -27,11 +27,11 @@ class HttpSoapCall extends SoapCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function makeRequest($soap)
+    public function makeRequest()
     {
-        $soap->__setLocation($this->url);
+        $this->engine->__setLocation($this->url);
         $this->status = 500;
-        $this->responseData = json_encode($soap->__call($this->call, array($this->requestObject)));
+        $this->responseData = json_encode($this->engine->__call($this->call, array($this->requestObject)));
         $this->status = 200;
     }
 

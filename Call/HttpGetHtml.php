@@ -8,7 +8,7 @@ use Lsw\ApiCallerBundle\Helper\Curl;
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
-class HttpGetHtml extends CurlCall implements ApiCallInterface
+class HttpGetHtml extends LegacyCurlCall implements ApiCallInterface
 {
     /**
      * ApiCall class constructor
@@ -27,16 +27,6 @@ class HttpGetHtml extends CurlCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function generateRequestData()
-    {
-        if ($this->requestObject) {
-                $this->requestData = http_build_query($this->requestObject);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function parseResponseData()
     {
         $this->responseObject = $this->responseData;
@@ -45,16 +35,12 @@ class HttpGetHtml extends CurlCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function makeRequest($curl, $options)
+    public function setCurlOptions($options = array())
     {
-        $url = $this->url;
-        if ($this->requestData) {
-                $url.= $this->requestData;
-        }
-        $curl->setopt(CURLOPT_URL, $url);
-        $curl->setopt(CURLOPT_COOKIE, $this->cookie);
-        $curl->setoptArray($options);
-        $this->responseData = $curl->exec();
+        $params = array();
+        $params['cookie'] = $this->cookie;
+
+        return parent::setCurlOptions(array_merge($params, $options));
     }
 
 }

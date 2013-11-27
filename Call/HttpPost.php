@@ -6,16 +6,8 @@ namespace Lsw\ApiCallerBundle\Call;
  *
  * @author Andrii Shchurkov <a.shchurkov@leaseweb.com>
  */
-class HttpPost extends CurlCall implements ApiCallInterface
+class HttpPost extends LegacyCurlCall implements ApiCallInterface
 {
-    /**
-    * {@inheritdoc}
-    */
-    public function generateRequestData()
-    {
-        $this->requestData = http_build_query($this->requestObject);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -27,13 +19,13 @@ class HttpPost extends CurlCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function makeRequest($curl, $options)
+    public function setCurlOptions($options = array())
     {
-        $curl->setopt(CURLOPT_URL, $this->url);
-        $curl->setopt(CURLOPT_POST, 1);
-        $curl->setopt(CURLOPT_POSTFIELDS, $this->requestData);
-        $curl->setoptArray($options);
-        $this->responseData = $curl->exec();
-    }
+        $params = array();
+        $params['url'] = $this->url;
+        $params['post'] = 1;
+        $params['postfields'] = $this->requestData;
 
+        return parent::setCurlOptions(array_merge($params, $options));
+    }
 }

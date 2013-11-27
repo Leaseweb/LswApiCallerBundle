@@ -67,11 +67,9 @@ interface ApiCallInterface
      * Execute the call
      *
      * @param array  $options      Array of options
-     * @param object $engine       Calling engine
-     * @param bool   $freshConnect Make a fresh connection every call
      *
      * @return mixed Response
      */
-    public function execute($options, $engine, $freshConnect);
+    public function execute($options);
 
 }
