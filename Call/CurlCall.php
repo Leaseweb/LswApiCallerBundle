@@ -199,9 +199,8 @@ abstract class CurlCall implements ApiCallInterface
         $this->status = $this->engine->getinfo(CURLINFO_HTTP_CODE);
         $this->requestHeaders = $this->engine->getinfo(CURLINFO_HEADER_OUT);
 
-        $result = $this->getResponseObject();
-
         $this->responseObject = $parser->parse($this->responseData);
+        $result = $this->getResponseObject();
 
         return $result;
     }
