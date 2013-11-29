@@ -2,6 +2,7 @@
 namespace Lsw\ApiCallerBundle\Call;
 
 use Lsw\ApiCallerBundle\Helper\Curl;
+use Lsw\ApiCallerBundle\Parser\ApiParserInterface;
 
 /**
  * cURL based API Call
@@ -14,10 +15,11 @@ abstract class CurlCall implements ApiCallInterface
     protected $name;
     protected $requestData;
     protected $requestObject;
+    protected $requestHeaders;
     protected $responseData;
     protected $responseObject;
+    protected $responseHeaders;
     protected $status;
-    protected $asAssociativeArray;
     protected $engine;
     protected $curlOptions;
 
@@ -26,13 +28,11 @@ abstract class CurlCall implements ApiCallInterface
      *
      * @param string $url                API url
      * @param object $requestObject      Request
-     * @param bool   $asAssociativeArray Return associative array
      */
-    public function __construct($url,$requestObject,$asAssociativeArray=false)
+    public function __construct($url, $requestObject)
     {
         $this->url = $url;
         $this->requestObject = $requestObject;
-        $this->asAssociativeArray = $asAssociativeArray;
         $this->generateRequestData();
 
         $this->engine = new Curl();
@@ -73,6 +73,14 @@ abstract class CurlCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
+    public function getRequestHeaders()
+    {
+        return $this->requestHeaders;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRequestObjectRepresentation()
     {
         $dumper = new \Symfony\Component\Yaml\Dumper();
@@ -94,6 +102,14 @@ abstract class CurlCall implements ApiCallInterface
     public function getResponseObject()
     {
         return $this->responseObject;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponseHeaders()
+    {
+        return $this->responseHeaders;
     }
 
     /**
@@ -173,35 +189,21 @@ abstract class CurlCall implements ApiCallInterface
     }
 
     /**
-     * Execute the call
-     *
-     * @param array  $options      Array of options
-     *
-     * @return mixed Response
+     * {@inheritdoc}
      */
-    public function execute($options = array())
+    public function execute(array $options = array(), ApiParserInterface $parser = null)
     {
         $this->setCurlOptions($options);
         $this->makeRequest();
 
         $this->status = $this->engine->getinfo(CURLINFO_HTTP_CODE);
+        $this->requestHeaders = $this->engine->getinfo(CURLINFO_HEADER_OUT);
 
         $result = $this->getResponseObject();
 
-        $this->clearCurlOptions();
+        $this->responseObject = $parser->parse($this->responseData);
 
         return $result;
-    }
-
-    /**
-     * Clearing curl options so they will not transfer to the next request
-     */
-    protected function clearCurlOptions()
-    {
-        foreach($this->curlOptions as $key => $option) {
-            $this->curlOptions[$key] = null;
-        }
-        $this->engine->setoptArray($this->curlOptions);
     }
 
     /**
@@ -211,7 +213,12 @@ abstract class CurlCall implements ApiCallInterface
      */
     protected function setCurlOptions($options = array())
     {
-        $this->curlOptions = $this->parseCurlOptions($options);
+        $params = array();
+        $params['returntransfer'] = true;
+        $params['header'] = true;
+        $params['curlinfo_header_out'] = true;
+
+        $this->curlOptions = $this->parseCurlOptions(array_merge($params, $options));
         $this->engine->setoptArray($this->curlOptions);
     }
 
@@ -231,8 +238,10 @@ abstract class CurlCall implements ApiCallInterface
         $prefix = 'CURLOPT_';
         foreach ($config as $key => $value) {
             $constantName = $prefix . strtoupper($key);
-            if (!defined($constantName)) {
-                $messageTemplate  = "Invalid option '%s' in apicaller.config parameter. ";
+            // Weird check is because of CURLINFO_HEADER_OUT. Note the "CURLINFO_".
+            // That also means that user can specify options with CURLOPT_ prefix directly.
+            if (!defined($constantName) && ($constantName = strtoupper($key)) && !defined($constantName)) {
+                $messageTemplate  = "Invalid option '%s' in apicaller.config.engine parameter. ";
                 $messageTemplate .= "Use options (from the cURL section in the PHP manual) without prefix '%s'";
                 $message = sprintf($messageTemplate, $key, $prefix);
                 throw new \Exception($message);
@@ -256,7 +265,10 @@ abstract class CurlCall implements ApiCallInterface
      */
     public function makeRequest()
     {
-        $this->responseData = $this->engine->exec();
-    }
+        $response = $this->engine->exec();
+        list($headers, $body) = explode("\r\n\r\n", $response, 2);
 
+        $this->responseHeaders = $headers;
+        $this->responseData = $body;
+    }
 }

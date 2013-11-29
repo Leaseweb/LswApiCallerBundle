@@ -21,6 +21,19 @@ class LswApiCallerExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('config.yml');
         $loader->load('services.yml');
+
+        $configuration = new Configuration();
+        $configs = $this->processConfiguration($configuration, $configs);
+
+        if($defaults = $container->getParameter('api_caller.options')) {
+            foreach($configs as $key => $config) {
+                if($config['replace_engine'] != true) {
+                    $configs[$key] = array_replace_recursive($defaults, $config);
+                }
+            }
+        }
+
+        $container->setParameter('api_caller.options', $configs);
     }
 
     /**

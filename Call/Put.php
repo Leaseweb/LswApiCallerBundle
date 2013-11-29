@@ -1,14 +1,12 @@
 <?php
 namespace Lsw\ApiCallerBundle\Call;
 
-use Lsw\ApiCallerBundle\Helper\Curl;
-
 /**
- * cURL based API call with request data send as GET parameters
+ * cURL based API call with request data send as PUT parameters
  *
- * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
+ * @author Dmitry Parnas <d.parnas@ocom.com>
  */
-class HttpPutJson extends HttpPostJson implements ApiCallInterface
+class Put extends Post implements ApiCallInterface
 {
     /**
      * {@inheritdoc}

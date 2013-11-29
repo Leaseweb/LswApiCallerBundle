@@ -2,9 +2,12 @@
 namespace Lsw\ApiCallerBundle\Caller;
 
 use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
+
 use Lsw\ApiCallerBundle\Call\ApiCallInterface;
-use Lsw\ApiCallerBundle\Call\ApiCallFactory;
-use Lsw\ApiCallerBundle\Parser\ApiParserFactory;
+use Lsw\ApiCallerBundle\Parser\ApiParserInterface;
+
+use Lsw\ApiCallerBundle\Factory\CallFactory;
+use Lsw\ApiCallerBundle\Factory\ParserFactory;
 
 /**
  * Logging API Caller
@@ -13,11 +16,12 @@ use Lsw\ApiCallerBundle\Parser\ApiParserFactory;
  */
 class LoggingApiCaller implements ApiCallerInterface
 {
-    protected $urlPrefix, $parser, $nextCallParser;
-    private $options;
-    private $logger;
-    private $lastCall;
-    private $engine;
+    protected $endpoint;
+    protected $parser;
+
+    protected $options;
+    protected $logger;
+    protected $lastCall;
 
     /**
      * Constructor creates dependency objects
@@ -26,24 +30,51 @@ class LoggingApiCaller implements ApiCallerInterface
      * @param ApiCallLoggerInterface $logger  Logger
      *
      */
-    public function __construct($options, ApiCallLoggerInterface $logger = null)
+    public function __construct($options, ApiCallLoggerInterface $logger = null, ApiParserInterface $parser = null)
     {
-        $this->options = $options;
+        $this->endpoint = $options['endpoint'];
+
+        if(!$parser) {
+            $parser = ParserFactory::get($options['format']);
+        }
+
+        $this->parser = $parser;
         $this->logger = $logger;
-        $this->freshConnect = isset($this->options['fresh_connect']) ? $this->options['fresh_connect'] : false;
+        $this->options = $options;
     }
 
+    /**
+     * Execute an API call using a *Call method
+     *
+     * @return string The parsed response of the API call
+     */
     public function __call($name, array $arguments)
     {
         if(substr($name, -4) == 'Call') {
             $method = substr($name, 0, -4);
 
-            $call = ApiCallFactory::get($method, $arguments);
+            //$arguments[0] is command or url
+            $arguments[0] = $this->urlify($arguments[0]);
 
-            $this->logger->startCall($call);
-            $result = $call->execute($this->options);
-            $this->logger->stopCall($call);
+            $call = CallFactory::get($method, $arguments);
+
+            return $this->call($call);
         }
+    }
+
+    /**
+     *
+     * @param string $command command to urlify
+     *
+     * @return string command
+     */
+    protected function urlify($command)
+    {
+        if(!filter_var($command, FILTER_VALIDATE_URL)){
+            $command = $this->endpoint.$command;
+        }
+
+        return $command;
     }
 
     /**
@@ -69,45 +100,11 @@ class LoggingApiCaller implements ApiCallerInterface
             $this->logger->startCall($call);
         }
         $this->lastCall = $call;
-        $result = $call->execute($this->options);
+        $result = $call->execute($this->options['engine'], $this->parser);
         if ($this->logger) {
             $this->logger->stopCall($call);
         }
 
         return $result;
     }
-
-    /**
-     * Set URL prefix
-     *
-     * @param string $prefix
-     *
-     */
-    public function setUrlPrefix($prefix)
-    {
-        $this->urlPrefix = $prefix;
-    }
-
-    /**
-     * Set default parser
-     *
-     * @param string $parser
-     *
-     */
-    public function setParser($parser)
-    {
-        $this->parser = ApiParserFactory::get($parser);
-    }
-
-    /**
-     * Set parser for the next call only
-     *
-     * @param string $parser
-     *
-     */
-    public function setNextCallParser($parser)
-    {
-        $this->nextCallParser = ApiParserFactory::get($parser);
-    }
-
 }

@@ -72,7 +72,7 @@
                             <td>
                                 {{ call.requestData|length }} bytes
                                 {% include 'LswApiCallerBundle:Collector:data.html.twig'
-                                    with {'data': call.requestData, 'object': call.requestObject}
+                                    with {'data': call.requestData, 'object': call.requestObject, 'headers': call.requestHeaders}
                                 %}
                             </td>
                         </tr>
@@ -81,7 +81,7 @@
                             <td>
                                 {{ call.responseData|length }} bytes
                                 {% include 'LswApiCallerBundle:Collector:data.html.twig'
-                                    with {'data': call.responseData, 'object': call.responseObject}
+                                    with {'data': call.responseData, 'object': call.responseObject, 'headers': call.responseHeaders}
                                 %}
                             </td>
                         </tr>

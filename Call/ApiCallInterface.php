@@ -1,6 +1,7 @@
 <?php
 namespace Lsw\ApiCallerBundle\Call;
 use Lsw\ApiCallerBundle\Helper\Curl;
+use Lsw\ApiCallerBundle\Parser\ApiParserInterface;
 
 /**
  * Interface of cURL based API Call
@@ -9,7 +10,7 @@ use Lsw\ApiCallerBundle\Helper\Curl;
  */
 interface ApiCallInterface
 {
-    public function __construct($url,$requestObject,$asAssociativeArray=false);
+    public function __construct($url,$requestObject);
 
     /**
      * Get the URL of the call
@@ -34,6 +35,11 @@ interface ApiCallInterface
     public function getRequestObject();
 
     /**
+     * Get the request request headers data as string
+     */
+    public function getRequestHeaders();
+
+    /**
      * Get the request parameter data object as YML formatted string
      */
     public function getRequestObjectRepresentation();
@@ -47,6 +53,11 @@ interface ApiCallInterface
      * Get the request response data as PHP object
      */
     public function getResponseObject();
+
+    /**
+     * Get the request response headers data as string
+     */
+    public function getResponseHeaders();
 
     /**
      * Get the request response data object as YML formatted string
@@ -66,10 +77,11 @@ interface ApiCallInterface
     /**
      * Execute the call
      *
-     * @param array  $options      Array of options
+     * @param array                 $options    Array of options
+     * @param ApiParserInterface    $parser     Parser for the returned data
      *
      * @return mixed Response
      */
-    public function execute($options);
+    public function execute(array $options = array(), ApiParserInterface $parser = null);
 
 }

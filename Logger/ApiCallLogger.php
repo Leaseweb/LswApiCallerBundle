@@ -55,8 +55,10 @@ class ApiCallLogger implements ApiCallLoggerInterface
         $status = $call->getStatus();
         $responseData = $call->getResponseData();
         $responseObject = $call->getResponseObjectRepresentation();
+        $responseHeaders = $call->getResponseHeaders();
+        $requestHeaders = $call->getRequestHeaders();
         $executionMS = microtime(true) - $this->start;
-        $this->calls[$this->currentCall]+=compact('status', 'responseData', 'responseObject', 'executionMS');
+        $this->calls[$this->currentCall]+=compact('status', 'responseData', 'responseObject', 'responseHeaders', 'requestHeaders', 'executionMS');
 
         if (null !== $this->logger) {
         $type = $this->calls[$this->currentCall]['type'];

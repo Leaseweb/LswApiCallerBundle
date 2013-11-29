@@ -1,14 +1,13 @@
 parameters:
-    api_caller.class: Lsw\ApiCallerBundle\Caller\LoggingApiCaller
+    api_caller_factory.class: Lsw\ApiCallerBundle\Factory\ApiCallerFactory
     api_call_logger.class: Lsw\ApiCallerBundle\Logger\ApiCallLogger
     api_caller.data_collector.class: Lsw\ApiCallerBundle\DataCollector\ApiCallDataCollector
     api_caller.data_collector.template: "LswApiCallerBundle:Collector:api"
 
 services:
     api_caller:
-        class: %api_caller.class%
-        arguments: [%api_caller.options%,@api_call_logger]
-        scope: prototype
+        class: %api_caller_factory.class%
+        arguments: [%api_caller.options%, @api_call_logger]
     api_call_logger:
         class: %api_call_logger.class%
         arguments: [@logger]

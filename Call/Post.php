@@ -4,18 +4,10 @@ namespace Lsw\ApiCallerBundle\Call;
 /**
  * cURL based API call with request data send as POST parameters
  *
- * @author Andrii Shchurkov <a.shchurkov@leaseweb.com>
+ * @author Dmitry Parnas <d.parnas@ocom.com>
  */
-class HttpPost extends LegacyCurlCall implements ApiCallInterface
+class Post extends CurlCall implements ApiCallInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function parseResponseData()
-    {
-        $this->responseObject = $this->responseData;
-    }
-
     /**
      * {@inheritdoc}
      */

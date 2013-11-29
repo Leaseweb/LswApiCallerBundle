@@ -3,11 +3,11 @@
 namespace Lsw\ApiCallerBundle\Parser;
 
 /**
- * Result parser for json
+ * This thing just returns the thing you put into this thing.
  *
  * @author Dmitry Parnas <d.parnas@ocom.com>
  */
-class Json implements ApiParserInterface
+class Passthrough implements ApiParserInterface
 {
     /**
      * {@inheritdoc}
@@ -16,9 +16,7 @@ class Json implements ApiParserInterface
      */
     public function parse($data)
     {
-        $parsed = json_decode($data);
-
-        return $parsed;
+        return $data;
     }
 
 
