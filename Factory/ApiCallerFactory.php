@@ -4,6 +4,7 @@ namespace Lsw\ApiCallerBundle\Factory;
 
 use Lsw\ApiCallerBundle\Caller\LoggingApiCaller;
 use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
+use Lsw\ApiCallerBundle\Parser\ApiParserInterface;
 
 /**
  * Logging API Caller Factory
