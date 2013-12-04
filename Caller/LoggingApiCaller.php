@@ -16,9 +16,11 @@ use Lsw\ApiCallerBundle\Factory\ParserFactory;
 class LoggingApiCaller implements ApiCallerInterface
 {
     protected $endpoint;
-    protected $parser, $onetimeParser;
+    protected $parser;
+    protected $onetimeParser;
 
     protected $options;
+    protected $engineOptions;
     protected $logger;
     protected $lastCall;
 
@@ -39,6 +41,8 @@ class LoggingApiCaller implements ApiCallerInterface
         $this->parser = $parser;
         $this->logger = $logger;
         $this->options = $options;
+
+        $this->resetEngineOptions();
     }
 
     /**
@@ -98,17 +102,19 @@ class LoggingApiCaller implements ApiCallerInterface
             $this->logger->startCall($call);
         }
         $this->lastCall = $call;
-        $result = $call->execute($this->options['engine'], $this->onetimeParser ?: $this->parser);
+        $result = $call->execute($this->engineOptions, $this->onetimeParser ?: $this->parser);
         if ($this->logger) {
             $this->logger->stopCall($call);
         }
 
         $this->resetParser();
+        $this->resetEngineOptions();
+
         return $result;
     }
 
     /**
-     * Set result parser
+     * Set result parser for next call
      *
      * @param callable|string $parser Result parser
      *
@@ -129,6 +135,33 @@ class LoggingApiCaller implements ApiCallerInterface
     public function resetParser()
     {
         $this->onetimeParser = null;
+
+        return $this;
+    }
+
+    /**
+     * Set engine option for the next call
+     *
+     * @param string $name Option name
+     * @param string $value Option value
+     *
+     * @return self
+     */
+    public function onetimeEngineOption($name, $value)
+    {
+        $this->engineOptions[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Reset engine options to default
+     *
+     * @return self
+     */
+    public function resetEngineOptions()
+    {
+        $this->engineOptions = $this->options['engine'];
 
         return $this;
     }
