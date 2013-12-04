@@ -2,7 +2,6 @@
 namespace Lsw\ApiCallerBundle\Call;
 
 use Lsw\ApiCallerBundle\Helper\Curl;
-use Lsw\ApiCallerBundle\Parser\ApiParserInterface;
 
 /**
  * cURL based API Call
@@ -191,7 +190,7 @@ abstract class CurlCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(array $options = array(), ApiParserInterface $parser = null)
+    public function execute(array $options = array(), $parser)
     {
         $this->setCurlOptions($options);
         $this->makeRequest();
@@ -199,7 +198,7 @@ abstract class CurlCall implements ApiCallInterface
         $this->status = $this->engine->getinfo(CURLINFO_HTTP_CODE);
         $this->requestHeaders = $this->engine->getinfo(CURLINFO_HEADER_OUT);
 
-        $this->responseObject = $parser->parse($this->responseData);
+        $this->responseObject = $parser($this->responseData);
         $result = $this->getResponseObject();
 
         return $result;

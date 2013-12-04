@@ -22,6 +22,10 @@ class ObjectFactory
      */
     static public function get($name, $arguments = array())
     {
+        if(is_callable($name)) {
+            return $name;
+        }
+
         $name = ucfirst($name);
         $namespace = static::TARGET;
 

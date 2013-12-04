@@ -7,7 +7,7 @@ namespace Lsw\ApiCallerBundle\Parser;
  *
  * @author Dmitry Parnas <d.parnas@ocom.com>
  */
-class Passthrough implements ApiParserInterface
+class Passthrough extends ApiParser implements ApiParserInterface
 {
     /**
      * {@inheritdoc}

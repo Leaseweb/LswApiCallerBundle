@@ -1,7 +1,6 @@
 <?php
 namespace Lsw\ApiCallerBundle\Call;
 use Lsw\ApiCallerBundle\Helper\Curl;
-use Lsw\ApiCallerBundle\Parser\ApiParserInterface;
 
 /**
  * Interface of cURL based API Call
@@ -77,11 +76,11 @@ interface ApiCallInterface
     /**
      * Execute the call
      *
-     * @param array                 $options    Array of options
-     * @param ApiParserInterface    $parser     Parser for the returned data
+     * @param array     $options    Array of options
+     * @param callable  $parser     Parser for the returned data
      *
      * @return mixed Response
      */
-    public function execute(array $options = array(), ApiParserInterface $parser = null);
+    public function execute(array $options = array(), $parser);
 
 }

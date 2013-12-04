@@ -7,7 +7,7 @@ namespace Lsw\ApiCallerBundle\Parser;
  *
  * @author Dmitry Parnas <d.parnas@ocom.com>
  */
-class Json implements ApiParserInterface
+class Json extends ApiParser implements ApiParserInterface
 {
     /**
      * {@inheritdoc}

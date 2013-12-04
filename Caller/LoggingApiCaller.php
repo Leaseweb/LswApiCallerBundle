@@ -4,7 +4,6 @@ namespace Lsw\ApiCallerBundle\Caller;
 use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
 
 use Lsw\ApiCallerBundle\Call\ApiCallInterface;
-use Lsw\ApiCallerBundle\Parser\ApiParserInterface;
 
 use Lsw\ApiCallerBundle\Factory\CallFactory;
 use Lsw\ApiCallerBundle\Factory\ParserFactory;
@@ -17,7 +16,7 @@ use Lsw\ApiCallerBundle\Factory\ParserFactory;
 class LoggingApiCaller implements ApiCallerInterface
 {
     protected $endpoint;
-    protected $parser;
+    protected $parser, $onetimeParser;
 
     protected $options;
     protected $logger;
@@ -28,15 +27,14 @@ class LoggingApiCaller implements ApiCallerInterface
      *
      * @param array                  $options Options array
      * @param ApiCallLoggerInterface $logger  Logger
+     * @param callable|string $parser Result parser
      *
      */
-    public function __construct($options, ApiCallLoggerInterface $logger = null, ApiParserInterface $parser = null)
+    public function __construct($options, ApiCallLoggerInterface $logger = null, $parser = null)
     {
         $this->endpoint = $options['endpoint'];
 
-        if(!$parser) {
-            $parser = ParserFactory::get($options['format']);
-        }
+        $parser = ParserFactory::get($parser ?: $options['format']);
 
         $this->parser = $parser;
         $this->logger = $logger;
@@ -100,11 +98,39 @@ class LoggingApiCaller implements ApiCallerInterface
             $this->logger->startCall($call);
         }
         $this->lastCall = $call;
-        $result = $call->execute($this->options['engine'], $this->parser);
+        $result = $call->execute($this->options['engine'], $this->onetimeParser ?: $this->parser);
         if ($this->logger) {
             $this->logger->stopCall($call);
         }
 
+        $this->resetParser();
         return $result;
     }
+
+    /**
+     * Set result parser
+     *
+     * @param callable|string $parser Result parser
+     *
+     * @return self
+     */
+    public function onetimeParser($parser)
+    {
+        $this->onetimeParser = ParserFactory::get($parser ?: $options['format']);
+
+        return $this;
+    }
+
+    /**
+     * Reset parser to default
+     *
+     * @return self
+     */
+    public function resetParser()
+    {
+        $this->onetimeParser = null;
+
+        return $this;
+    }
+
 }
