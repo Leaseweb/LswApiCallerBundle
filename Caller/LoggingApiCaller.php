@@ -55,28 +55,19 @@ class LoggingApiCaller implements ApiCallerInterface
         if(substr($name, -4) == 'Call') {
             $method = substr($name, 0, -4);
 
-            //$arguments[0] is command or url
-            $arguments[0] = $this->urlify($arguments[0]);
+            $url = $this->endpoint;
+
+            // to allow to pass and call direct url
+            if(filter_var($arguments[0], FILTER_VALIDATE_URL)){
+                $url = $arguments[0];
+                $arguments[0] = '';
+            }
+            array_unshift($arguments, $url);
 
             $call = CallFactory::get($method, $arguments);
 
             return $this->call($call);
         }
-    }
-
-    /**
-     *
-     * @param string $command command to urlify
-     *
-     * @return string command
-     */
-    protected function urlify($command)
-    {
-        if(!filter_var($command, FILTER_VALIDATE_URL)){
-            $command = $this->endpoint.$command;
-        }
-
-        return $command;
     }
 
     /**

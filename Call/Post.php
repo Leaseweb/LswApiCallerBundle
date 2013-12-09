@@ -14,7 +14,7 @@ class Post extends CurlCall implements ApiCallInterface
     public function setCurlOptions($options = array())
     {
         $params = array();
-        $params['url'] = $this->url;
+        $params['url'] = $this->url.$this->command;
         $params['post'] = 1;
         $params['postfields'] = $this->requestData;
 

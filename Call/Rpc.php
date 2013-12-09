@@ -2,22 +2,28 @@
 namespace Lsw\ApiCallerBundle\Call;
 
 /**
- * cURL based API call with request data send as GET parameters
+ * RPC based API call
  *
  * @author Dmitry Parnas <d.parnas@ocom.com>
  */
-class Get extends CurlCall implements ApiCallInterface
+class Rpc extends Post implements ApiCallInterface
 {
-
     /**
      * {@inheritdoc}
      */
     public function setCurlOptions($options = array())
     {
         $params = array();
-        $params['url'] = $this->url.$this->command.'?'.$this->requestData;
+        $params['url'] = $this->url;
 
         return parent::setCurlOptions(array_merge($params, $options));
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function generateRequestData()
+    {
+        $this->requestData = xmlrpc_encode_request($this->command, $this->requestObject);
+    }
 }

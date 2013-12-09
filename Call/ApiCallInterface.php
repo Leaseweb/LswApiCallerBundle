@@ -9,7 +9,7 @@ use Lsw\ApiCallerBundle\Helper\Curl;
  */
 interface ApiCallInterface
 {
-    public function __construct($url,$requestObject);
+    public function __construct($url, $command, $requestObject);
 
     /**
      * Get the URL of the call

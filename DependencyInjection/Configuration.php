@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->arrayNode('engine')
                         ->useAttributeAsKey('')
-                        ->prototype('scalar')
+                        ->prototype('variable')
                     ->end()
                 ->end()
             ->end();

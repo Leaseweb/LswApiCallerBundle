@@ -28,9 +28,11 @@ abstract class CurlCall implements ApiCallInterface
      * @param string $url                API url
      * @param object $requestObject      Request
      */
-    public function __construct($url, $requestObject = array())
+    public function __construct($url, $command = '', $requestObject = array())
     {
         $this->url = $url;
+        $this->command = $command;
+
         $this->requestObject = $requestObject;
         $this->generateRequestData();
 
