@@ -1,6 +1,5 @@
 <?php
 namespace Lsw\ApiCallerBundle\Call;
-use Lsw\ApiCallerBundle\Helper\Curl;
 
 /**
  * Interface of cURL based API Call

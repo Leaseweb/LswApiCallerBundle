@@ -196,6 +196,7 @@ abstract class CurlCall implements ApiCallInterface
     {
         $this->setCurlOptions($options);
         $this->makeRequest();
+        $this->assignResponseValues();
 
         $this->status = $this->engine->getinfo(CURLINFO_HTTP_CODE);
         $this->requestHeaders = $this->engine->getinfo(CURLINFO_HEADER_OUT);
@@ -265,7 +266,14 @@ abstract class CurlCall implements ApiCallInterface
      */
     public function makeRequest()
     {
-        $response = $this->engine->exec();
+        $this->responseRaw = $this->engine->exec();
+    }
+
+    /**
+     * Parses raw curl response into header and body (data)
+     */
+    protected function assignResponseValues($response)
+    {
         list($headers, $body) = explode("\r\n\r\n", $response, 2);
 
         $this->responseHeaders = $headers;
