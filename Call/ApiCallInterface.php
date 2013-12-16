@@ -80,6 +80,6 @@ interface ApiCallInterface
      *
      * @return mixed Response
      */
-    public function execute(array $options = array(), $parser);
+    public function execute(array $options = array(), Callable $parser = null);
 
 }
