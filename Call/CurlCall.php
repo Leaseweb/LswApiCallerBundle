@@ -272,9 +272,9 @@ abstract class CurlCall implements ApiCallInterface
     /**
      * Parses raw curl response into header and body (data)
      */
-    protected function assignResponseValues($response)
+    protected function assignResponseValues()
     {
-        list($headers, $body) = explode("\r\n\r\n", $response, 2);
+        list($headers, $body) = explode("\r\n\r\n", $this->responseRaw, 2);
 
         $this->responseHeaders = $headers;
         $this->responseData = $body;
