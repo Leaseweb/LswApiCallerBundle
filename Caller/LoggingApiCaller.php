@@ -57,11 +57,14 @@ class LoggingApiCaller implements ApiCallerInterface
 
             $url = $this->endpoint;
 
-            // to allow to pass and call direct url
-            if(filter_var($arguments[0], FILTER_VALIDATE_URL)){
-                $url = $arguments[0];
-                $arguments[0] = '';
+            if(isset($arguments[0])) {
+                // to allow to pass and call direct url
+                if(filter_var($arguments[0], FILTER_VALIDATE_URL)){
+                    $url = $arguments[0];
+                    $arguments[0] = '';
+                }
             }
+
             array_unshift($arguments, $url);
 
             $call = CallFactory::get($method, $arguments);
@@ -77,6 +80,10 @@ class LoggingApiCaller implements ApiCallerInterface
      */
     public function getLastStatus()
     {
+        if($this->lastCall == null) {
+            return null;
+        }
+
         return $this->lastCall->getStatus();
     }
 
