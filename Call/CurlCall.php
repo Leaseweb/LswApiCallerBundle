@@ -15,6 +15,7 @@ abstract class CurlCall implements ApiCallInterface
     protected $requestData;
     protected $requestObject;
     protected $requestHeaders;
+    protected $responseRaw;
     protected $responseData;
     protected $responseObject;
     protected $responseHeaders;
@@ -25,18 +26,19 @@ abstract class CurlCall implements ApiCallInterface
     /**
      * Class constructor
      *
-     * @param string $url                API url
-     * @param object $requestObject      Request
+     * @param string $url               API url
+     * @param string $command           API command
+     * @param object $requestObject     Request data
+     * @param object $engine            Request engine
      */
-    public function __construct($url, $command = '', $requestObject = array())
+    public function __construct($url, $command = '', $requestObject = array(), Curl $engine = null)
     {
         $this->url = $url;
         $this->command = $command;
 
         $this->requestObject = $requestObject;
-        $this->generateRequestData();
 
-        $this->engine = new Curl();
+        $this->engine = $engine ?: new Curl();
     }
 
     /**
@@ -60,7 +62,7 @@ abstract class CurlCall implements ApiCallInterface
      */
     public function getRequestData()
     {
-        return $this->requestData;
+        return http_build_query($this->requestObject);
     }
 
     /**
@@ -197,10 +199,8 @@ abstract class CurlCall implements ApiCallInterface
         $this->setCurlOptions($options);
         $this->makeRequest();
         $this->assignResponseValues();
-
         $this->status = $this->engine->getinfo(CURLINFO_HTTP_CODE);
         $this->requestHeaders = $this->engine->getinfo(CURLINFO_HEADER_OUT);
-
         $this->responseObject = ($parser) ? $parser($this->responseData) : $this->responseData;
         $result = $this->getResponseObject();
 
@@ -256,15 +256,7 @@ abstract class CurlCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function generateRequestData()
-    {
-        $this->requestData = http_build_query($this->requestObject);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function makeRequest()
+    protected function makeRequest()
     {
         $this->responseRaw = $this->engine->exec();
     }

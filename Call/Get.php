@@ -15,7 +15,7 @@ class Get extends CurlCall implements ApiCallInterface
     public function setCurlOptions($options = array())
     {
         $params = array();
-        $params['url'] = $this->url.$this->command.'?'.$this->requestData;
+        $params['url'] = $this->url.$this->command.'?'.http_build_query($this->requestObject);
 
         return parent::setCurlOptions(array_merge($params, $options));
     }

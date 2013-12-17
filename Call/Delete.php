@@ -11,7 +11,7 @@ class Delete extends Post implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function setCurlOptions($options = array())
+    protected function setCurlOptions($options = array())
     {
         $params = array();
         $params['customrequest'] = 'delete';

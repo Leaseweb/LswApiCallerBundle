@@ -11,7 +11,7 @@ class Rpc extends Post implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function setCurlOptions($options = array())
+    protected function setCurlOptions($options = array())
     {
         $params = array();
         $params['url'] = $this->url;
@@ -22,7 +22,7 @@ class Rpc extends Post implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function generateRequestData()
+    protected function generateRequestData()
     {
         $this->requestData = xmlrpc_encode_request($this->command, $this->requestObject);
     }
