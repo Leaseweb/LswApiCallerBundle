@@ -2,6 +2,8 @@
 
 namespace Lsw\ApiCallerBundle\Tests\Call;
 
+use Lsw\ApiCallerBundle\Tests\Util;
+
 abstract class CurlCallTest extends \PHPUnit_Framework_TestCase
 {
     const CLASS_PREFIX = 'Lsw\\ApiCallerBundle\\Call\\';
@@ -12,14 +14,7 @@ abstract class CurlCallTest extends \PHPUnit_Framework_TestCase
 
     protected $call;
     protected $className;
-
-    protected function getRecording($name)
-    {
-        $recording = file_get_contents(__DIR__.'/_files/'.$name.'.txt');
-        $recording = str_replace("\n", "\r\n", $recording);
-
-        return $recording;
-    }
+    protected $util;
 
     protected function executeCall($parser = null)
     {
@@ -40,22 +35,8 @@ abstract class CurlCallTest extends \PHPUnit_Framework_TestCase
     {
         $this->setUpClassName();
 
-        $curl = $this->getMock(
-            'Lsw\\ApiCallerBundle\\Helper\\Curl',
-            array('exec', 'getinfo')
-        );
-
-        $curl->expects($this->any())
-            ->method('exec')
-            ->will($this->returnValue($this->getRecording('mocky_io_hello_world_response_raw')));
-
-        $curl->expects($this->any())
-            ->method('getinfo')
-            ->will($this->returnValueMap(array(
-                array(CURLINFO_HTTP_CODE,  $this->getRecording('mocky_io_hello_world_curlinfo_http_code')),
-                array(CURLINFO_HEADER_OUT, $this->getRecording('mocky_io_hello_world_curlinfo_header_out'))
-            )));
-
+        $this->util = new Util();
+        $curl = $this->util->getCurlMock();
 
         $this->call = new $this->className(self::TEST_URL, self::TEST_COMMAND, $this->testRequestObject, $curl);
 
@@ -98,26 +79,26 @@ abstract class CurlCallTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRequestHeaders()
     {
-        $this->assertEquals($this->call->getRequestHeaders(), $this->getRecording('mocky_io_hello_world_curlinfo_header_out'));
+        $this->assertEquals($this->call->getRequestHeaders(), $this->util->getRecording('mocky_io_hello_world_curlinfo_header_out'));
     }
 
     public function testGetResponseData()
     {
-        $this->assertEquals($this->call->getResponseData(), $this->getRecording('mocky_io_hello_world_response_data'));
+        $this->assertEquals($this->call->getResponseData(), $this->util->getRecording('mocky_io_hello_world_response_data'));
     }
 
     public function testGetResponseObject()
     {
-        $this->assertEquals($this->call->getResponseObject(), $this->getRecording('mocky_io_hello_world_response_data'));
+        $this->assertEquals($this->call->getResponseObject(), $this->util->getRecording('mocky_io_hello_world_response_data'));
 
         $parser = new \Lsw\ApiCallerBundle\Parser\Json();
         $this->executeCall($parser);
-        $this->assertEquals($this->call->getResponseObject(), $parser($this->getRecording('mocky_io_hello_world_response_data')));
+        $this->assertEquals($this->call->getResponseObject(), $parser($this->util->getRecording('mocky_io_hello_world_response_data')));
     }
 
     public function testGetResponseHeaders()
     {
-        $this->assertEquals($this->call->getResponseHeaders(), $this->getRecording('mocky_io_hello_world_response_headers'));
+        $this->assertEquals($this->call->getResponseHeaders(), $this->util->getRecording('mocky_io_hello_world_response_headers'));
     }
 
     public function testGetResponseObjectRepresentation()
@@ -127,7 +108,7 @@ abstract class CurlCallTest extends \PHPUnit_Framework_TestCase
 
     public function testGetStatusCode()
     {
-        $this->assertEquals($this->call->getStatusCode(), $this->getRecording('mocky_io_hello_world_curlinfo_http_code'));
+        $this->assertEquals($this->call->getStatusCode(), $this->util->getRecording('mocky_io_hello_world_curlinfo_http_code'));
     }
 
     public function testGetStatus()
@@ -138,7 +119,7 @@ abstract class CurlCallTest extends \PHPUnit_Framework_TestCase
     public function testExecuteSuccess()
     {
         $result = $this->executeCall();
-        $this->assertEquals($result, '{"hello": "world"}');
+        $this->assertEquals($result, $this->util->getRecording('mocky_io_hello_world_response_data'));
     }
 
 }
