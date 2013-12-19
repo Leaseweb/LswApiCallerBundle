@@ -2,6 +2,8 @@
 
 namespace Lsw\ApiCallerBundle\Tests\Parser;
 
+use Lsw\ApiCallerBundle\Tests\Util;
+
 abstract class ApiParserTest extends \PHPUnit_Framework_TestCase
 {
     protected $parser;
@@ -10,14 +12,11 @@ abstract class ApiParserTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $reflection = new \ReflectionClass($this);
-        $name = $reflection->getShortName();
-
-        $name = substr($name, 0, strrpos($name, 'Test'));
+        $util = new Util();
+        $name = $util->getClassName($this);
 
         $class = 'Lsw\\ApiCallerBundle\\Parser\\'.$name;
         $this->parser = new $class();
-
 
         $this->encodeSource();
     }

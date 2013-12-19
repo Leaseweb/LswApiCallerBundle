@@ -32,4 +32,13 @@ class Util extends \PHPUnit_Framework_TestCase
 
         return $curl;
     }
+
+    public function getClassName($class)
+    {
+        $reflection = new \ReflectionClass($class);
+        $name = $reflection->getShortName();
+        $name = substr($name, 0, strrpos($name, 'Test'));
+
+        return $name;
+    }
 }

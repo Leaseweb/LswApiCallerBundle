@@ -24,9 +24,8 @@ abstract class CurlCallTest extends \PHPUnit_Framework_TestCase
 
     protected function setUpClassName()
     {
-        $name = get_class($this);
-        $name = substr($name, strrpos($name, '\\')+1);
-        $name = substr($name, 0, strrpos($name, 'Test'));
+        $util = new Util();
+        $name = $util->getClassName($this);
 
         $this->className = static::CLASS_PREFIX.$name;
     }
