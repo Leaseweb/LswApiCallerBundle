@@ -27,7 +27,6 @@ class ApiCallerFactory
         $this->logger = $logger;
     }
 
-
     /**
      * Singleton factory method to instantiate/get api caller
      *
@@ -39,13 +38,10 @@ class ApiCallerFactory
     {
         if(isset($this->options[$name])) {
             if(!isset($this->instances[$name])) {
-
                 $this->instances[$name] = new LoggingApiCaller($this->options[$name], $this->logger, $parser);
             }
 
-            if(isset($this->instances[$name])) {
-                return $this->instances[$name];
-            }
+            return $this->instances[$name];
         }
 
         throw new \Exception('Wrong API: '.$name);
