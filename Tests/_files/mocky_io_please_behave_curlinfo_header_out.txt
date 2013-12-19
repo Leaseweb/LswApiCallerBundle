@@ -1,0 +1,6 @@
+GET /v2/52b2d62a4a61591802f999b6? HTTP/1.1
+User-Agent: LeaseWeb API Caller
+Host: www.mocky.io
+Accept: */*
+Content-type: text/xml
+

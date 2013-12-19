@@ -12,7 +12,7 @@ class Util extends \PHPUnit_Framework_TestCase
         return $recording;
     }
 
-    public function getCurlMock()
+    public function getCurlMock($requestPrefix = 'mocky_io_hello_world')
     {
         $curl = $this->getMock(
             'Lsw\\ApiCallerBundle\\Helper\\Curl',
@@ -21,13 +21,13 @@ class Util extends \PHPUnit_Framework_TestCase
 
         $curl->expects($this->any())
             ->method('exec')
-            ->will($this->returnValue($this->getRecording('mocky_io_hello_world_response_raw')));
+            ->will($this->returnValue($this->getRecording($requestPrefix.'_response_raw')));
 
         $curl->expects($this->any())
             ->method('getinfo')
             ->will($this->returnValueMap(array(
-                array(CURLINFO_HTTP_CODE,  $this->getRecording('mocky_io_hello_world_curlinfo_http_code')),
-                array(CURLINFO_HEADER_OUT, $this->getRecording('mocky_io_hello_world_curlinfo_header_out'))
+                array(CURLINFO_HTTP_CODE,  $this->getRecording($requestPrefix.'_curlinfo_http_code')),
+                array(CURLINFO_HEADER_OUT, $this->getRecording($requestPrefix.'_curlinfo_header_out'))
             )));
 
         return $curl;
