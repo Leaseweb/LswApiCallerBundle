@@ -8,7 +8,7 @@ namespace Lsw\ApiCallerBundle\Call;
  */
 interface ApiCallInterface
 {
-    public function __construct($url, $command, $requestObject);
+    public function __construct($url, $method, $requestObject);
 
     /**
      * Get the URL of the call
@@ -23,7 +23,6 @@ interface ApiCallInterface
     /**
      * Get the request parameter data as HTTP Query String
      *
-     * @see \Lsw\ApiCallerBundle\Call\ApiCall::generateRequestData()
      */
     public function getRequestData();
 

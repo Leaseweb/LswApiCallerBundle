@@ -22,19 +22,20 @@ abstract class CurlCall implements ApiCallInterface
     protected $status;
     protected $engine;
     protected $curlOptions;
+    protected $method;
 
     /**
      * Class constructor
      *
      * @param string $url               API url
-     * @param string $command           API command
+     * @param string $method            API method
      * @param object $requestObject     Request data
      * @param object $engine            Request engine
      */
-    public function __construct($url, $command = '', $requestObject = array(), Curl $engine = null)
+    public function __construct($url, $method = '', $requestObject = array(), Curl $engine = null)
     {
         $this->url = $url;
-        $this->command = $command;
+        $this->method = $method;
 
         $this->requestObject = $requestObject;
 

@@ -16,7 +16,7 @@ class Rpc extends CurlCall implements ApiCallInterface
         $params = array();
         $params['url'] = $this->url;
         $params['post'] = 1;
-        $params['postfields'] = xmlrpc_encode_request($this->command, $this->requestObject);
+        $params['postfields'] = xmlrpc_encode_request($this->method, $this->requestObject);
 
         return parent::setCurlOptions(array_merge($params, $options));
     }
