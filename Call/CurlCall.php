@@ -12,7 +12,6 @@ abstract class CurlCall implements ApiCallInterface
 {
     protected $url;
     protected $name;
-    protected $requestData;
     protected $requestObject;
     protected $requestHeaders;
     protected $responseRaw;
