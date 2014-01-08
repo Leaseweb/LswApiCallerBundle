@@ -266,7 +266,9 @@ abstract class CurlCall implements ApiCallInterface
      */
     protected function assignResponseValues()
     {
-        list($headers, $body) = explode("\r\n\r\n", $this->responseRaw, 2);
+        $parts = explode("\r\n\r\nHTTP/", $this->responseRaw);
+        $parts = (count($parts) > 1 ? 'HTTP/' : '').array_pop($parts);
+        list($headers, $body) = explode("\r\n\r\n", $parts, 2);
 
         $this->responseHeaders = $headers;
         $this->responseData = $body;
