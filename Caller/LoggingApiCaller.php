@@ -55,17 +55,10 @@ class LoggingApiCaller implements ApiCallerInterface
         if(substr($name, -4) == 'Call') {
             $method = substr($name, 0, -4);
 
-            $url = $this->endpoint;
-
-            if(isset($arguments[0])) {
-                // to allow to pass and call direct url
-                if(filter_var($arguments[0], FILTER_VALIDATE_URL)){
-                    $url = $arguments[0];
-                    $arguments[0] = '';
-                }
+            if(!isset($arguments[0]) || !filter_var($arguments[0], FILTER_VALIDATE_URL)){
+                // if first argument is the full url - we will use it, instead of endpoint
+                array_unshift($arguments, $this->endpoint);
             }
-
-            array_unshift($arguments, $url);
 
             $call = CallFactory::get($method, $arguments);
 
