@@ -194,7 +194,7 @@ abstract class CurlCall implements ApiCallInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(array $options = array(), Callable $parser = null)
+    public function execute(array $options = array(), $parser = null)
     {
         $this->setCurlOptions($options);
         $this->makeRequest();

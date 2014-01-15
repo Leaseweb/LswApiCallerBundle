@@ -79,6 +79,6 @@ interface ApiCallInterface
      *
      * @return mixed Response
      */
-    public function execute(array $options = array(), Callable $parser = null);
+    public function execute(array $options = array(), $parser = null);
 
 }

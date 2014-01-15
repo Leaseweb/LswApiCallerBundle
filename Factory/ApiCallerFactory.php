@@ -33,7 +33,7 @@ class ApiCallerFactory
      * @param ApiParserInterface    $parser DI parser
      *
      */
-    public function api($name, Callable $parser = null)
+    public function api($name, $parser = null)
     {
         if(isset($this->options[$name])) {
             if(!isset($this->instances[$name])) {
