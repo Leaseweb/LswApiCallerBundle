@@ -4,7 +4,6 @@ namespace Lsw\ApiCallerBundle\Factory;
 
 use Lsw\ApiCallerBundle\Caller\LoggingApiCaller;
 use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
-use Lsw\ApiCallerBundle\Parser\ApiParserInterface;
 
 /**
  * Logging API Caller Factory
@@ -34,7 +33,7 @@ class ApiCallerFactory
      * @param ApiParserInterface    $parser DI parser
      *
      */
-    public function api($name, ApiParserInterface $parser = null)
+    public function api($name, Callable $parser = null)
     {
         if(isset($this->options[$name])) {
             if(!isset($this->instances[$name])) {

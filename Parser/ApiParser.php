@@ -7,7 +7,7 @@ namespace Lsw\ApiCallerBundle\Parser;
  *
  * @author Dmitry Parnas <d.parnas@ocom.com>
  */
-class ApiParser
+abstract class ApiParser
 {
     public function __invoke($data)
     {

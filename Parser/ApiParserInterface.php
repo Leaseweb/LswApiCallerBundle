@@ -10,6 +10,12 @@ namespace Lsw\ApiCallerBundle\Parser;
 interface ApiParserInterface
 {
     /**
+     * @param $data
+     * @return mixed
+     */
+    public function __invoke($data);
+
+    /**
      * Parses passed data
      *
      * @param string $data
