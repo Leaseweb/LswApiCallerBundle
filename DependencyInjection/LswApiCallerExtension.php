@@ -24,7 +24,10 @@ class LswApiCallerExtension extends Extension
         $configuration = new Configuration();
         $configs = $this->processConfiguration($configuration, $configs);
 
-        if($defaults = $container->getParameter('api_caller.options')) {
+        if($defaults = $container->getParameter('defaults')) {
+            if(empty($configs['_'])) {
+                $configs['_'] = $container->getParameter('_');
+            }
             foreach($configs as $key => $config) {
                 if($config['replace_engine'] != true) {
                     $configs[$key] = array_replace_recursive($defaults, $config);
