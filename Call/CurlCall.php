@@ -88,7 +88,7 @@ abstract class CurlCall implements ApiCallInterface
     {
         $dumper = new \Symfony\Component\Yaml\Dumper();
 
-        return $dumper->dump(json_decode(json_encode($this->requestObject), true), 100);
+        return $dumper->dump($this->requestObject, 100);
     }
 
     /**
@@ -122,7 +122,7 @@ abstract class CurlCall implements ApiCallInterface
     {
         $dumper = new \Symfony\Component\Yaml\Dumper();
 
-        return $dumper->dump(json_decode(json_encode($this->responseObject), true), 100);
+        return $dumper->dump($this->responseObject, 100);
     }
 
     /**
