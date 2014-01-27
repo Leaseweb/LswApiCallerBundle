@@ -107,14 +107,14 @@ LswApiCaller 2 is built on the concept of separate APIs. To use it you first nee
 
 Example:
 
-    lsw_api_caller:
-        example_api:
-            endpoint: http://your.url/maybe/even/with/path/
-            format:   json
-            engine:
-                timeout: 10
-
-
+``` yaml
+lsw_api_caller:
+    example_api:
+        endpoint: http://your.url/maybe/even/with/path/
+        format:   json
+        engine:
+            timeout: 10
+```
 "endpoint" is prefix that would be prepended to your api call paths.
 
 "format" is default parser api response should get through. While you can use your custom parsers as well, you can only setup one of the built-in ones from the configuration.
@@ -128,17 +128,19 @@ Example:
 
 api_caller service has api() singleton factory method that you can use to get access to your api. It accepts api name (from the configuration) as it first parameter.
 
-    $api = $this->get('api_caller')->api('example_api');
-
+``` php
+$api = $this->get('api_caller')->api('example_api');
+```
 
 ### Making requests
 
 Most of the time you will be using [built-in request types](#request-types) to make your API calls. To do that just prefix Call() function name with request type that you need and pass method or resource name as the first parameter and array of parameters as the second one.
 
-    $api->postCall('pizzas', array('type' => 'margherita', 'crust' => 'thin'));
+``` php
+$api->postCall('pizzas', array('type' => 'margherita', 'crust' => 'thin'));
 
-    $api->getCall('order', array('id' => 522));
-
+$api->getCall('order', array('id' => 522));
+```
 
 ### Built-in methods
 
@@ -153,15 +155,17 @@ Most of the time you will be using [built-in request types](#request-types) to m
 
 It's possible to actually call a resource using the full url. To do this just pass it as the first parameter.
 
-    $api->getCall('http://example.com/', 'order', array('id' => 522);
-
+``` php
+$api->getCall('http://example.com/', 'order', array('id' => 522);
+```
 
 ### "Next call" options and parser
 
 You can change engine options or parser just for the next call using `onetimeEngineOption($name, $value)` or `onetimeParser($parser)` methods respectively. Both of them returns current object, so you can chain them:
 
-    $api->onetimeParser('passthrough')->getCall('weirdMethod');
-
+``` php
+$api->onetimeParser('passthrough')->getCall('weirdMethod');
+```
 
 ### Setting up parsers
 
@@ -179,10 +183,20 @@ At this time, you can't use your own caller the same way you would use built-in 
 
 Why it's strongly suggested to define your api in the configuration file and then use them like desribed earlier, it's still possible to use api caller in the old fashioned way:
 
-    $this->get('api_caller')->getCall('http://some.api.com/stuff', array('parameters' => 'here'));
+``` php
+$this->get('api_caller')->getCall('http://some.api.com/stuff', array('parameters' => 'here'));
+```
 
 In the background predefined api named "_" is used to do that.
 
+### <a name="request-types"></a> Built-In Request Types
+
+* get
+* post
+* put
+* delete
+* rpc
+* soap
 
 ## License
 
