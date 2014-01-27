@@ -6,13 +6,10 @@ LswApiCallerBundle
 The LswApiCallerBundle adds a CURL API caller to your Symfony2 application.
 It is easy to use from the code and is aimed to have full debugging capabilities.
 
-[Read the LeaseWebLabs blog about LswApiCallerBundle](http://www.leaseweblabs.com/2013/01/symfony2-bundle-for-curl-api-calling/)
-
-
 ## Requirements
 
 * PHP 5.3 with curl support
-* Symfony 2.1 (works under Symfony 2.0 as well)
+* Symfony 2.3
 
 ## Installation
 
@@ -89,36 +86,6 @@ It should display that the option "cURL support" is set to "enabled".
 This package should work on a Windows installation as well provided the CURL support
 is enabled in PHP.
 
-## Usage
-
-You can use the caller by getting the service "api_caller" and using the "call" function with one of
-the available call types:
-
-- HttpGetJson
-- HttpPostJson
-- HttpPutJson
-- HttpDeleteJson
-- HttpGetHtml
-
-Example of usage with the "HttpGetJson" call type:
-
-``` php
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller
-use Lsw\ApiCallerBundle\Call\HttpGetJson;
-
-class SomeController extends Controller
-{
-    public function someAction()
-    {
-        ...
-        $output = $this->get('api_caller')->call(new HttpGetJson($url, $parameters));
-        ...
-    }
-}
-
-```
-
 ## Configuration
 
 By default it uses these cURL options:
@@ -130,8 +97,92 @@ parameters:
         useragent: "LeaseWeb API Caller"  # contents of the "User-Agent: " header.
         followlocation: true  # to follow any "Location: " header that the server sends.
         sslversion: 3  # set to 3 to avoid any bugs that relate to automatic version selection.
-        fresh_connect: false  # set to true to force full reconnect every call.
 ```
+
+## Usage
+
+### APIs and configuration
+
+LswApiCaller 2 is built on the concept of separate APIs. To use it you first need to configure API you would like to access in parameters.yml.
+
+Example:
+
+    lsw_api_caller:
+        example_api:
+            endpoint: http://your.url/maybe/even/with/path/
+            format:   json
+            engine:
+                timeout: 10
+
+
+"endpoint" is prefix that would be prepended to your api call paths.
+
+"format" is default parser api response should get through. While you can use your custom parsers as well, you can only setup one of the built-in ones from the configuration.
+
+**Hint**: "passthrough" parser will just past unmodified response body back to your application.
+
+"engine" is array of configuration parameters that should be passed to the underlying call engine. All the built-in callers are using curl as their base engine, so "engine" parameters would be passed to curl_setopt (don't use CURLOPT or CURLINFO prefixes, though, they would be added automatically).
+
+
+### Get your api instance
+
+api_caller service has api() singleton factory method that you can use to get access to your api. It accepts api name (from the configuration) as it first parameter.
+
+    $api = $this->get('api_caller')->api('example_api');
+
+
+### Making requests
+
+Most of the time you will be using [built-in request types](#request-types) to make your API calls. To do that just prefix Call() function name with request type that you need and pass method or resource name as the first parameter and array of parameters as the second one.
+
+    $api->postCall('pizzas', array('type' => 'margherita', 'crust' => 'thin'));
+
+    $api->getCall('order', array('id' => 522));
+
+
+### Built-in methods
+
+"get", "post", "put", "delete" - HTTP calls of the corresponding time. Passed "method" will be glued to the endpoint set for this api.
+
+"xmlrpc" - XmlRpc request.
+
+"soap" - Soap request.
+
+
+### Using full url
+
+It's possible to actually call a resource using the full url. To do this just pass it as the first parameter.
+
+    $api->getCall('http://example.com/', 'order', array('id' => 522);
+
+
+### "Next call" options and parser
+
+You can change engine options or parser just for the next call using `onetimeEngineOption($name, $value)` or `onetimeParser($parser)` methods respectively. Both of them returns current object, so you can chain them:
+
+    $api->onetimeParser('passthrough')->getCall('weirdMethod');
+
+
+### Setting up parsers
+
+All the methods that accept parser as a parameter are able to do it in three ways: string, callable instance (preferably implementing "Lsw\ApiCallerBundle\Parser\ApiParserInterface") or closure. In case of instance or closure - they should accept one string parameter (body of the response from the api).
+
+
+### Using your own request callers
+
+It is possible to use your own request callers that implement "Lsw\ApiCallerBundle\Call\ApiCallInterface". For most of the callers, it makes sense also to extend "Lsw\ApiCallerBundle\Call\CurlCall" as it will do most of the work.
+
+At this time, you can't use your own caller the same way you would use built-in ones (e.g. with the magic *Call method). You will have to first instantiate it directly (by passing it endpoint, method and request parameters) and then pass it into $api->call() method.
+
+
+### Using api caller without configuration
+
+Why it's strongly suggested to define your api in the configuration file and then use them like desribed earlier, it's still possible to use api caller in the old fashioned way:
+
+    $this->get('api_caller')->getCall('http://some.api.com/stuff', array('parameters' => 'here'));
+
+In the background predefined api named "_" is used to do that.
+
 
 ## License
 
