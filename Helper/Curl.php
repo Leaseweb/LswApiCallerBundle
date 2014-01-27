@@ -17,10 +17,6 @@ class Curl
      */
     public function __construct()
     {
-        if (!function_exists('curl_init')) {
-            $class = get_class($this);
-            throw new \Exception("Class '$class' depends on the PHP cURL library that is currently not installed");
-        }
         $this->handle = curl_init();
     }
 

@@ -1,10 +1,12 @@
 <?php
 namespace Lsw\ApiCallerBundle\Caller;
 
-use Lsw\ApiCallerBundle\Helper\Curl;
 use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
-use Lsw\ApiCallerBundle\Call\CurlCall;
+
 use Lsw\ApiCallerBundle\Call\ApiCallInterface;
+
+use Lsw\ApiCallerBundle\Factory\CallFactory;
+use Lsw\ApiCallerBundle\Factory\ParserFactory;
 
 /**
  * Logging API Caller
@@ -13,26 +15,62 @@ use Lsw\ApiCallerBundle\Call\ApiCallInterface;
  */
 class LoggingApiCaller implements ApiCallerInterface
 {
-    private $options;
-    private $logger;
-    private $lastCall;
-    private $engine;
-    private $freshConnect;
+    protected $endpoint;
+    protected $parser;
+    protected $onetimeParser;
+
+    protected $options;
+    protected $engineOptions;
+    protected $logger;
+    protected $lastCall;
 
     /**
      * Constructor creates dependency objects
      *
      * @param array                  $options Options array
      * @param ApiCallLoggerInterface $logger  Logger
+     * @param callable|string $parser Result parser
      *
-     * @throws \Exception When the cURL library can't be found
      */
-    public function __construct($options, ApiCallLoggerInterface $logger = null)
+    public function __construct($options, ApiCallLoggerInterface $logger = null, $parser = null)
     {
-        $this->options = $options;
+        $this->endpoint = $options['endpoint'];
+
+        $parser = ParserFactory::get($parser ?: $options['format']);
+
+        $this->parser = $parser;
         $this->logger = $logger;
-        $this->engine = null;
-        $this->freshConnect = isset($this->options['fresh_connect']) ? $this->options['fresh_connect'] : false;
+        $this->options = $options;
+
+        $this->resetEngineOptions();
+    }
+
+    /**
+     * Execute an API call using a *Call method
+     *
+     * @return string The parsed response of the API call
+     */
+    public function __call($name, array $arguments)
+    {
+        if(substr($name, -4) == 'Call') {
+            $method = substr($name, 0, -4);
+
+            $url = $this->endpoint;
+
+            if(isset($arguments[0])) {
+                // to allow to pass and call direct url
+                if(filter_var($arguments[0], FILTER_VALIDATE_URL)){
+                    $url = $arguments[0];
+                    $arguments[0] = '';
+                }
+            }
+
+            array_unshift($arguments, $url);
+
+            $call = CallFactory::get($method, $arguments);
+
+            return $this->call($call);
+        }
     }
 
     /**
@@ -42,6 +80,10 @@ class LoggingApiCaller implements ApiCallerInterface
      */
     public function getLastStatus()
     {
+        if($this->lastCall == null) {
+            return null;
+        }
+
         return $this->lastCall->getStatus();
     }
 
@@ -54,32 +96,72 @@ class LoggingApiCaller implements ApiCallerInterface
      */
     public function call(ApiCallInterface $call)
     {
-        if ($call instanceof CurlCall) {
-            if ($this->freshConnect || $this->engine == null || !($this->engine instanceof Curl)) {
-                $this->engine = new Curl();
-            }
-        } else {
-            if ($this->freshConnect || $this->engine == null || !($this->engine instanceof \SoapClient)) {
-                $this->engine = new \SoapClient($call->getUrl());
-            }
-        }
-
         if ($this->logger) {
             $this->logger->startCall($call);
         }
         $this->lastCall = $call;
-        $result = $call->execute($this->options, $this->engine, $this->freshConnect);
+        $result = $call->execute($this->engineOptions, $this->onetimeParser ?: $this->parser);
         if ($this->logger) {
             $this->logger->stopCall($call);
         }
 
-        if ($call instanceof CurlCall) {
-            if ($this->freshConnect) {
-                $this->engine->close();
-            }
-        }
+        $this->resetParser();
+        $this->resetEngineOptions();
 
         return $result;
+    }
+
+    /**
+     * Set result parser for next call
+     *
+     * @param callable|string $parser Result parser
+     *
+     * @return self
+     */
+    public function onetimeParser($parser)
+    {
+        $this->onetimeParser = ParserFactory::get($parser ?: $options['format']);
+
+        return $this;
+    }
+
+    /**
+     * Reset parser to default
+     *
+     * @return self
+     */
+    public function resetParser()
+    {
+        $this->onetimeParser = null;
+
+        return $this;
+    }
+
+    /**
+     * Set engine option for the next call
+     *
+     * @param string $name Option name
+     * @param string $value Option value
+     *
+     * @return self
+     */
+    public function onetimeEngineOption($name, $value)
+    {
+        $this->engineOptions[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Reset engine options to default
+     *
+     * @return self
+     */
+    public function resetEngineOptions()
+    {
+        $this->engineOptions = $this->options['engine'];
+
+        return $this;
     }
 
 }

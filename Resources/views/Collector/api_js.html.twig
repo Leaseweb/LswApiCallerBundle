@@ -1,0 +1,23 @@
+<script>
+    var src = document.getElementById('minimizePanelIcon').src;
+    var imgs = document.getElementsByClassName('lsw-api-toggle');
+
+    for (var i = 0; i < imgs.length; i++) {
+        imgs[i].src = src;
+
+        imgs[i].parentNode.onclick = function() {
+            var contentHolder = this.parentNode.getElementsByClassName('lsw-api-content')[0];
+            var display = (contentHolder.style.display == 'block') ? 'none' : 'block';
+            var img = this.getElementsByClassName('lsw-api-toggle')[0];
+
+            contentHolder.style.display = display;
+
+            if(display == 'none') {
+                img.className = "lsw-api-toggle";
+            } else {
+                img.className = "lsw-api-toggle lsw-api-toggled";
+            }
+            return false;
+        };
+    }
+</script>

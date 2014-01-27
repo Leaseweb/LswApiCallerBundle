@@ -1,6 +1,5 @@
 <?php
 namespace Lsw\ApiCallerBundle\Call;
-use Lsw\ApiCallerBundle\Helper\Curl;
 
 /**
  * Interface of cURL based API Call
@@ -9,7 +8,7 @@ use Lsw\ApiCallerBundle\Helper\Curl;
  */
 interface ApiCallInterface
 {
-    public function __construct($url,$requestObject,$asAssociativeArray=false);
+    public function __construct($url, $method, $requestObject);
 
     /**
      * Get the URL of the call
@@ -24,7 +23,6 @@ interface ApiCallInterface
     /**
      * Get the request parameter data as HTTP Query String
      *
-     * @see \Lsw\ApiCallerBundle\Call\ApiCall::generateRequestData()
      */
     public function getRequestData();
 
@@ -32,6 +30,11 @@ interface ApiCallInterface
      * Get the request parameter data as PHP object
      */
     public function getRequestObject();
+
+    /**
+     * Get the request request headers data as string
+     */
+    public function getRequestHeaders();
 
     /**
      * Get the request parameter data object as YML formatted string
@@ -47,6 +50,11 @@ interface ApiCallInterface
      * Get the request response data as PHP object
      */
     public function getResponseObject();
+
+    /**
+     * Get the request response headers data as string
+     */
+    public function getResponseHeaders();
 
     /**
      * Get the request response data object as YML formatted string
@@ -66,12 +74,11 @@ interface ApiCallInterface
     /**
      * Execute the call
      *
-     * @param array  $options      Array of options
-     * @param object $engine       Calling engine
-     * @param bool   $freshConnect Make a fresh connection every call
+     * @param array     $options    Array of options
+     * @param callable  $parser     Parser for the returned data
      *
      * @return mixed Response
      */
-    public function execute($options, $engine, $freshConnect);
+    public function execute(array $options = array(), $parser = null);
 
 }

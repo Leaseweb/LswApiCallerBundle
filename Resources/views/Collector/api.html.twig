@@ -42,37 +42,63 @@
 {% endblock %}
 
 {% block panel %}
-    <h2>API Calls</h2>
-
     {% if not collector.callcount %}
         <p>
             <em>No calls.</em>
         </p>
     {% else %}
-        <ul class="alt">
             {% for i, call in collector.calls %}
-                <li class="{{ i is odd ? 'odd' : 'even' }}">
-                    <div>
-                        <strong>Status</strong>: {{ call.status }}<br />
-                        <strong>URL</strong>: {{ call.url }}<br />
-                        <strong>Type</strong>: {{ call.type }}<br />
-                        <strong>Request</strong>: {{ call.requestData|length }} bytes
-                          <a href="data:text/plain;,{{ call.requestData|url_encode(true) }}">raw</a>
-                          <a href="data:text/html;,{{ call.requestData|url_encode(true) }}">html</a>
-                          <a href="data:text/plain;,{{ call.requestObject|url_encode(true) }}">parsed</a>
-                          <br />
-                        <strong>Response</strong>: {{ call.responseData|length }} bytes
-                          <a href="data:text/plain;,{{ call.responseData|url_encode(true) }}">raw</a>
-                          <a href="data:text/html;,{{ call.responseData|url_encode(true) }}">html</a>
-                          <a href="data:text/plain;,{{ call.responseObject|url_encode(true) }}">parsed</a>
-                          <br />
-                    </div>
-                    <small>
-                        <strong>Time</strong>: {{ '%0.2f'|format(call.executionMS * 1000) }} ms
-                    </small>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+                <h2>
+                    {{ call.url }}
+                    <p>{{ call.requestData|length > 100 ? call.requestData[:100] ~ '...' : call.requestData  }}</p>
+                </h2>
 
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>{{ call.status }}</td>
+                        </tr>
+                        <tr>
+                            <th>Type</th>
+                            <td>{{ call.type }}</td>
+                        </tr>
+                        <tr>
+                            <th>Request</th>
+                            <td>
+                                {{ call.requestData|length }} bytes
+                                {% include 'LswApiCallerBundle:Collector:data.html.twig'
+                                    with {'data': call.requestData, 'object': call.requestObject, 'headers': call.requestHeaders}
+                                %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Response</th>
+                            <td>
+                                {{ call.responseData|length }} bytes
+                                {% include 'LswApiCallerBundle:Collector:data.html.twig'
+                                    with {'data': call.responseData, 'object': call.responseObject, 'headers': call.responseHeaders}
+                                %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Time</th>
+                            <td>{{ '%0.2f'|format(call.executionMS * 1000) }} ms</td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% endfor %}
+    {% endif %}
 {% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    {% include 'LswApiCallerBundle:Collector:api_js.html.twig' %}
+
+    {% include 'LswApiCallerBundle:Collector:api.css.twig' %}
+{%  endblock %}

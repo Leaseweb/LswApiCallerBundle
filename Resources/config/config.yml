@@ -1,8 +1,13 @@
 parameters:
-    api_caller.options:
-        timeout: 10
-        ssl_verifypeer: false
-        useragent: "LeaseWeb API Caller"
-        followlocation: true
-        sslversion: 3
-        fresh_connect: false
+    defaults:
+        engine:
+          timeout: 10
+          ssl_verifypeer: false
+          useragent: "LeaseWeb API Caller"
+          followlocation: true
+          sslversion: 3
+
+    _:
+        endpoint:
+        format:   passthrough
+        replace_engine: false

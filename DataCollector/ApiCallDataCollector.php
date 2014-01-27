@@ -14,6 +14,7 @@ use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
 class ApiCallDataCollector extends DataCollector
 {
     private $logger;
+    protected $data;
 
     /**
      * Class constructor
