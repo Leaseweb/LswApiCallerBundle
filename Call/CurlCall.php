@@ -18,6 +18,7 @@ abstract class CurlCall implements ApiCallInterface
     protected $responseObject;
     protected $status;
     protected $asAssociativeArray;
+    protected $options;
 
     /**
      * Class constructor
@@ -25,11 +26,13 @@ abstract class CurlCall implements ApiCallInterface
      * @param string $url                API url
      * @param object $requestObject      Request
      * @param bool   $asAssociativeArray Return associative array
+     * @param array  $options            Additional options for the cURL engine
      */
-    public function __construct($url,$requestObject,$asAssociativeArray=false)
+    public function __construct($url,$requestObject,$asAssociativeArray=false,$options = array())
     {
         $this->url = $url;
         $this->requestObject = $requestObject;
+        $this->options = $options;
         $this->asAssociativeArray = $asAssociativeArray;
         $this->generateRequestData();
     }
@@ -180,7 +183,7 @@ abstract class CurlCall implements ApiCallInterface
     public function execute($options, $engine, $freshConnect = false)
     {
         $options['returntransfer']=true;
-        $options = $this->parseCurlOptions($options);
+        $options = $this->parseCurlOptions(array_merge($options, $this->options));
         $this->makeRequest($engine, $options);
         $this->parseResponseData();
         $this->status = $engine->getinfo(CURLINFO_HTTP_CODE);
