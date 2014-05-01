@@ -250,7 +250,7 @@ abstract class CurlCall implements ApiCallInterface
                 if (substr($h[0], 0, 1) == "\t")
                     $headers[$key] .= "\r\n\t".trim($h[0]);
                 elseif (!$key)
-                    $headers[0] = trim($h[0]);trim($h[0]);
+                    $headers['Status'] = trim($h[0]);
             }
         }
 
