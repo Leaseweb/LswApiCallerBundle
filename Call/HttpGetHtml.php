@@ -54,7 +54,7 @@ class HttpGetHtml extends CurlCall implements ApiCallInterface
         $curl->setopt(CURLOPT_URL, $url);
         $curl->setopt(CURLOPT_COOKIE, $this->cookie);
         $curl->setoptArray($options);
-        $this->responseData = $curl->exec();
+        $this->curlExec($curl);
     }
 
 }

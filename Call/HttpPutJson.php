@@ -36,7 +36,7 @@ class HttpPutJson extends CurlCall implements ApiCallInterface
         $curl->setopt(CURLOPT_POSTFIELDS, $this->requestData);
         $curl->setopt(CURLOPT_CUSTOMREQUEST, "PUT");
         $curl->setoptArray($options);
-        $this->responseData = $curl->exec();
+        $this->curlExec($curl);
     }
 
 }

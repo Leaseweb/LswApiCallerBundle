@@ -16,9 +16,11 @@ abstract class CurlCall implements ApiCallInterface
     protected $requestObject;
     protected $responseData;
     protected $responseObject;
+    protected $responseHeaderData;
+    protected $responseHeaderObject;
     protected $status;
     protected $asAssociativeArray;
-    protected $options;
+    protected $options = array();
 
     /**
      * Class constructor
@@ -77,6 +79,14 @@ abstract class CurlCall implements ApiCallInterface
         $dumper = new \Symfony\Component\Yaml\Dumper();
 
         return $dumper->dump(json_decode(json_encode($this->requestObject), true), 100);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponseHeaderObject()
+    {
+        return $this->responseHeaderObject;
     }
 
     /**
@@ -186,6 +196,7 @@ abstract class CurlCall implements ApiCallInterface
         $options = $this->parseCurlOptions(array_merge($options, $this->options));
         $this->makeRequest($engine, $options);
         $this->parseResponseData();
+        $this->parseResponseHeader();
         $this->status = $engine->getinfo(CURLINFO_HTTP_CODE);
         $result = $this->getResponseObject();
 
@@ -228,7 +239,7 @@ abstract class CurlCall implements ApiCallInterface
      * @return array
      *
      */
-    protected function header_parse($raw_headers)
+    protected function parseHeader($raw_headers)
     {
         $headers = array();
         $key = '';
@@ -289,6 +300,19 @@ abstract class CurlCall implements ApiCallInterface
         ");
     }
 
+    public function parseResponseHeader()
+    {
+        if( $this->responseHeaderData )  {
+            if($this->asAssociativeArray) {
+                $this->responseHeaderObject = $this->parseHeader($this->responseHeaderData);
+            } else {
+                $this->responseHeaderObject = $this->responseHeaderData;
+            }
+        } else {
+            $this->responseHeaderObject = NULL;
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -307,4 +331,18 @@ abstract class CurlCall implements ApiCallInterface
         ");
     }
 
+    /**
+     * @param $curl
+     */
+    public function curlExec($curl)
+    {
+        $data = $curl->exec();
+        if( preg_match("/^HTTP\/\d\.\d/", $data) ) {
+            $tmp = explode( "\r\n\r\n", $data);
+            $this->responseHeaderData = $tmp[0];
+            $this->responseData = $tmp[1];
+        } else {
+            $this->responseData = $data;
+        }
+    }
 }
