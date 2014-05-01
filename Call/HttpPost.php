@@ -21,7 +21,15 @@ class HttpPost extends CurlCall implements ApiCallInterface
      */
     public function parseResponseData()
     {
-        $this->responseObject = $this->responseData;
+        if( preg_match("/^HTTP\/\d\.\d/", $this->responseData) ) {
+            $tmp = explode( "\r\n\r\n", $this->responseData);
+            $this->responseObject = array( 'headers' => $this->header_parse($tmp[0]), 'response' => $tmp[1] );
+        } else {
+            if( FALSE == $this->asAssociativeArray )
+                $this->responseObject = json_encode( array( 'headers' => array(), 'response' => $this->responseData ) );
+            else
+                $this->responseObject = array( 'headers' => array(), 'response' => $this->responseData );
+        }
     }
 
     /**
