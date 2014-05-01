@@ -22,6 +22,7 @@ class HttpGetHtml extends CurlCall implements ApiCallInterface
         $this->url = $url;
         $this->cookie = $cookie;
         $this->requestObject = $requestObject;
+        $this->generateRequestData();
     }
 
     /**
@@ -30,7 +31,7 @@ class HttpGetHtml extends CurlCall implements ApiCallInterface
     public function generateRequestData()
     {
         if ($this->requestObject) {
-                $this->requestData = http_build_query($this->requestObject);
+                $this->requestData = '?'.http_build_query($this->requestObject);
         }
     }
 
