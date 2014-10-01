@@ -1,5 +1,5 @@
 {
-    "name": "leaseweb/api-caller-bundle",
+    "name": "leaseweb/api-caller-bundle-ivisedo",
     "type": "symfony-bundle",
     "description": "cURL API call functionality with full Web Debug Toolbar integration",
     "keywords": ["API","cURL","Symfony2"],
