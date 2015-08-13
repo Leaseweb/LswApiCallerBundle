@@ -82,4 +82,19 @@ class LoggingApiCaller implements ApiCallerInterface
         return $result;
     }
 
+    /**
+     * Manually set an option.  Overrides any configured option.
+     *
+     * @param string $name The CURLOPT name
+     * @param string $value The CURLOPT value to set
+     *
+     * @return array
+     */
+    public function setOption($name, $value)
+    {
+        $this->options[$name] = $value;
+
+        return $this->options;
+    }
+
 }

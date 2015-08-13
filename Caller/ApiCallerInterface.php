@@ -27,4 +27,14 @@ interface ApiCallerInterface
      */
     public function getLastStatus();
 
+    /**
+     * Manually set an option.  Overrides any configured option.
+     *
+     * @param string $name The CURLOPT name
+     * @param string $value The CURLOPT value to set
+     *
+     * @return array
+     */
+    public function setOption($name, $value);
+
 }
