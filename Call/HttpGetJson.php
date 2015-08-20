@@ -33,7 +33,7 @@ class HttpGetJson extends CurlCall implements ApiCallInterface
     {
         $curl->setopt(CURLOPT_URL, $this->url.'?'.$this->requestData);
         $curl->setoptArray($options);
-        $this->responseData = $curl->exec();
+        $this->curlExec($curl);
     }
 
 }

@@ -34,7 +34,7 @@ class HttpPostJson extends CurlCall implements ApiCallInterface
         $curl->setopt(CURLOPT_POST, 1);
         $curl->setopt(CURLOPT_POSTFIELDS, $this->requestData);
         $curl->setoptArray($options);
-        $this->responseData = $curl->exec();
+        $this->curlExec($curl);
     }
 
 }

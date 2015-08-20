@@ -16,8 +16,11 @@ abstract class CurlCall implements ApiCallInterface
     protected $requestObject;
     protected $responseData;
     protected $responseObject;
+    protected $responseHeaderData;
+    protected $responseHeaderObject;
     protected $status;
     protected $asAssociativeArray;
+    protected $options = array();
 
     /**
      * Class constructor
@@ -25,11 +28,13 @@ abstract class CurlCall implements ApiCallInterface
      * @param string $url                API url
      * @param object $requestObject      Request
      * @param bool   $asAssociativeArray Return associative array
+     * @param array  $options            Additional options for the cURL engine
      */
-    public function __construct($url,$requestObject,$asAssociativeArray=false)
+    public function __construct($url,$requestObject,$asAssociativeArray=false,$options = array())
     {
         $this->url = $url;
         $this->requestObject = $requestObject;
+        $this->options = $options;
         $this->asAssociativeArray = $asAssociativeArray;
         $this->generateRequestData();
     }
@@ -74,6 +79,14 @@ abstract class CurlCall implements ApiCallInterface
         $dumper = new \Symfony\Component\Yaml\Dumper();
 
         return $dumper->dump(json_decode(json_encode($this->requestObject), true), 100);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponseHeaderObject()
+    {
+        return $this->responseHeaderObject;
     }
 
     /**
@@ -180,9 +193,10 @@ abstract class CurlCall implements ApiCallInterface
     public function execute($options, $engine, $freshConnect = false)
     {
         $options['returntransfer']=true;
-        $options = $this->parseCurlOptions($options);
+        $options = $this->parseCurlOptions(array_merge($options, $this->options));
         $this->makeRequest($engine, $options);
         $this->parseResponseData();
+        $this->parseResponseHeader();
         $this->status = $engine->getinfo(CURLINFO_HTTP_CODE);
         $result = $this->getResponseObject();
 
@@ -218,6 +232,43 @@ abstract class CurlCall implements ApiCallInterface
     }
 
     /**
+     * Protected method to parse HTTP headers if the exist in the response object
+     *
+     * @param $raw_headers
+     *
+     * @return array
+     *
+     */
+    protected function parseHeader($raw_headers)
+    {
+        $headers = array();
+        $key = '';
+
+        foreach(explode("\n", $raw_headers) as $i => $h) {
+            $h = explode(':', $h, 2);
+
+            if (isset($h[1])) {
+                if (!isset($headers[$h[0]]))
+                    $headers[$h[0]] = trim($h[1]);
+                elseif (is_array($headers[$h[0]])) {
+                    $headers[$h[0]] = array_merge($headers[$h[0]], array(trim($h[1])));
+                } else {
+                    $headers[$h[0]] = array_merge(array($headers[$h[0]]), array(trim($h[1])));
+                }
+
+                $key = $h[0];
+            } else {
+                if (substr($h[0], 0, 1) == "\t")
+                    $headers[$key] .= "\r\n\t".trim($h[0]);
+                elseif (!$key)
+                    $headers['Status'] = trim($h[0]);
+            }
+        }
+
+        return $headers;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function generateRequestData()
@@ -249,6 +300,19 @@ abstract class CurlCall implements ApiCallInterface
         ");
     }
 
+    public function parseResponseHeader()
+    {
+        if( $this->responseHeaderData )  {
+            if($this->asAssociativeArray) {
+                $this->responseHeaderObject = $this->parseHeader($this->responseHeaderData);
+            } else {
+                $this->responseHeaderObject = $this->responseHeaderData;
+            }
+        } else {
+            $this->responseHeaderObject = NULL;
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -267,4 +331,18 @@ abstract class CurlCall implements ApiCallInterface
         ");
     }
 
+    /**
+     * @param $curl
+     */
+    public function curlExec($curl)
+    {
+        $data = $curl->exec();
+        if( preg_match("/^HTTP\/\d\.\d/", $data) ) {
+            $tmp = explode( "\r\n\r\n", $data);
+            $this->responseHeaderData = $tmp[0];
+            $this->responseData = $tmp[1];
+        } else {
+            $this->responseData = $data;
+        }
+    }
 }
