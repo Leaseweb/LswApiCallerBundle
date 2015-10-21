@@ -31,7 +31,11 @@ class HttpDeleteJson extends CurlCall implements ApiCallInterface
      */
     public function makeRequest($curl, $options)
     {
-        $curl->setopt(CURLOPT_URL, $this->url.'?'.$this->requestData);
+        $url = $this->url;
+        if ( $this->requestData ) {
+            $url .= '?' . $this->requestData;
+        }
+        $curl->setopt(CURLOPT_URL, $url);
         $curl->setopt(CURLOPT_CUSTOMREQUEST, 'DELETE');
         $curl->setoptArray($options);
         $this->curlExec($curl);
