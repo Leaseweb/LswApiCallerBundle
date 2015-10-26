@@ -49,6 +49,9 @@ abstract class CurlCall implements ApiCallInterface
     public function setDirtyWay($dirtyWay)
     {
         $this->dirtyWay = $dirtyWay;
+        if($dirtyWay){
+            $this->generateRequestData();
+        }
     }
 
     /**
