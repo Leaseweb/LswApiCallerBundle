@@ -2,7 +2,7 @@
 
 namespace Lsw\ApiCallerBundle\Logger;
 
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Lsw\ApiCallerBundle\Call\ApiCallInterface;
 
 /**
