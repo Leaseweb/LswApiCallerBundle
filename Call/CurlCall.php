@@ -21,6 +21,7 @@ abstract class CurlCall implements ApiCallInterface
     protected $status;
     protected $asAssociativeArray;
     protected $options = array();
+    protected $dirtyWay =  false;
 
     /**
      * Class constructor
@@ -37,6 +38,20 @@ abstract class CurlCall implements ApiCallInterface
         $this->options = $options;
         $this->asAssociativeArray = $asAssociativeArray;
         $this->generateRequestData();
+    }
+
+    /**
+     * Set to perform GET request in dirty way.
+     * If true, then it can perform GET request with url like: foo=x&foo=y&foo=z&status=new&status=on%20hold&s??tatus=open
+     *
+     * @param bool $dirtyWay
+     */
+    public function setDirtyWay($dirtyWay)
+    {
+        $this->dirtyWay = $dirtyWay;
+        if($dirtyWay){
+            $this->generateRequestData();
+        }
     }
 
     /**

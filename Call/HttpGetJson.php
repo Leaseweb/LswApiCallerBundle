@@ -15,7 +15,12 @@ class HttpGetJson extends CurlCall implements ApiCallInterface
     */
     public function generateRequestData()
     {
-        $this->requestData = http_build_query($this->requestObject);
+        if ( $this->requestObject ) {
+            $this->requestData = http_build_query( $this->requestObject );
+            if ( $this->dirtyWay ) {
+                $this->requestData = preg_replace( '/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $this->requestData );
+            }
+        }
     }
 
     /**
@@ -31,7 +36,11 @@ class HttpGetJson extends CurlCall implements ApiCallInterface
      */
     public function makeRequest($curl, $options)
     {
-        $curl->setopt(CURLOPT_URL, $this->url.'?'.$this->requestData);
+        $url = $this->url;
+        if ( $this->requestData ) {
+            $url .= '?' . $this->requestData;
+        }
+        $curl->setopt(CURLOPT_URL, $url);
         $curl->setoptArray($options);
         $this->curlExec($curl);
     }

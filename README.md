@@ -119,6 +119,38 @@ class SomeController extends Controller
 
 ```
 
+### Using the dirty way to perform GET request
+
+If you need to perform GET request to search some information with url like: foo=x&foo=y&foo=z&status=new&status=on%20hold&s??tatus=open
+
+You can use the caller by getting the service "api_caller" and using the "call" function with one of
+the available call types:
+
+- HttpGetHtml
+- HttpGetJson
+- HttpGetXML
+
+Example of usage with the "HttpGetJson" call type:
+
+``` php
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller
+use Lsw\ApiCallerBundle\Call\HttpGetJson;
+
+class SomeController extends Controller
+{
+    public function someAction()
+    {
+        ...
+        $api_caller_request = new HttpGetJson($url, $parameters);
+        $api_caller_request->setDirtyWay(true);
+        $output = $this->get('api_caller')->call($api_caller_request);
+        ...
+    }
+}
+
+```
+
 ## Configuration
 
 By default it uses these cURL options:
