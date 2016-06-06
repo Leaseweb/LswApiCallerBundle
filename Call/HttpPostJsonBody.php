@@ -6,7 +6,7 @@ namespace Lsw\ApiCallerBundle\Call;
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
-class HttpPostJsonBody extends HttpPost implements ApiCallInterface
+class HttpPostJsonBody extends CurlCall implements ApiCallInterface
 {
     /**
     * {@inheritdoc}
