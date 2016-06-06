@@ -2,7 +2,7 @@
 namespace Lsw\ApiCallerBundle\Call;
 use Lsw\ApiCallerBundle\Helper\Curl;
 /**
- * cURL based API call with request data send as JSON body
+ * cURL based API call with request data sent as JSON body
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
