@@ -1,7 +1,7 @@
 <?php
 namespace Lsw\ApiCallerBundle\Call;
 /**
- * cURL based API call with request data send as POST parameters
+ * cURL based API call with request data sent as JSON body
  * Response is parsed as JSON
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
