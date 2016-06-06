@@ -7,14 +7,14 @@ namespace Lsw\ApiCallerBundle\Call;
  *
  * @author Maurits van der Schee <m.vanderschee@leaseweb.com>
  */
-class HttpPostJson extends HttpPost implements ApiCallInterface
+class HttpPostJson extends CurlCall implements ApiCallInterface
 {
     /**
     * {@inheritdoc}
     */
     public function generateRequestData()
     {
-        $this->requestData = json_encode($this->requestObject);
+        $this->requestData = http_build_query($this->requestObject);
     }
 
     /**
