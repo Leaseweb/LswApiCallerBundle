@@ -3,8 +3,6 @@
 namespace Lsw\ApiCallerBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Lsw\ApiCallerBundle\DependencyInjection\LswApiCallerExtension;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
 * Bundle for API Caller with logging and debug toolbar integration

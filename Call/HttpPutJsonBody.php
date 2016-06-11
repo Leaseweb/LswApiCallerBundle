@@ -1,6 +1,6 @@
 <?php
 namespace Lsw\ApiCallerBundle\Call;
-use Lsw\ApiCallerBundle\Helper\Curl;
+
 /**
  * cURL based API call with request data sent as JSON body
  *
