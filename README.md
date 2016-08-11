@@ -96,6 +96,7 @@ the available call types:
 
 - HttpGetJson
 - HttpPostJson
+- HttpPostJsonBody (the body will be json_encode)
 - HttpPutJson
 - HttpDeleteJson
 - HttpGetHtml
@@ -113,6 +114,35 @@ class SomeController extends Controller
     {
         ...
         $output = $this->get('api_caller')->call(new HttpGetJson($url, $parameters));
+        ...
+    }
+}
+
+```
+
+Example of usage with the "HttpPostJsonBody" call type:
+
+``` php
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller
+use Lsw\ApiCallerBundle\Call\HttpPostJsonBody;
+
+class SomeController extends Controller
+{
+    public function someAction()
+    {
+        ...
+        $arrayToPost = array(
+            'ip_address' => array(
+                'name' => 'IpName',
+                'hostname' => 'HostName',
+                'ip' => '192.168.0.1',
+                'throttling_template' => array(
+                    'name' => 'Throttling Template'
+                )
+            )
+        ); // this will be json_encode. If you don't want to json_encode, use HttpPostJson instead of HttpPostJsonBody
+        $output = $this->get('api_caller')->call(new HttpPostJsonBody($url, $arrayToPost, true, $parameters)); // true to have an associative array as answer
         ...
     }
 }
