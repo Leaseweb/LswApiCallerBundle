@@ -6,15 +6,15 @@ parameters:
 
 services:
     api_caller:
-        class: %api_caller.class%
-        arguments: [%api_caller.options%, "@api_call_logger"]
+        class: "%api_caller.class%"
+        arguments: ["%api_caller.options%", "@api_call_logger"]
     api_call_logger:
-        class: %api_call_logger.class%
+        class: "%api_call_logger.class%"
         arguments: [ "@logger" ]
         tags:
             - { name: monolog.logger, channel:api_caller }
     api_caller.data_collector:
-        class: %api_caller.data_collector.class%
+        class: "%api_caller.data_collector.class%"
         arguments: [ "@api_call_logger" ]
         tags:
-            - { name: data_collector, template: %api_caller.data_collector.template%, id:"api"}
+            - { name: data_collector, template: "%api_caller.data_collector.template%", id:"api"}
