@@ -114,6 +114,9 @@ class SomeController extends Controller
     {
         ...
         $output = $this->get('api_caller')->call(new HttpGetJson($url, $parameters));
+        
+        $entities = $output[0];
+        $httpCode = $output[1];
         ...
     }
 }

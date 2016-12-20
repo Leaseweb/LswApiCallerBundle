@@ -79,7 +79,7 @@ class LoggingApiCaller implements ApiCallerInterface
             }
         }
 
-        return $result;
+         return array($result,$this->engine->getinfo(CURLINFO_HTTP_CODE));
     }
 
     /**
