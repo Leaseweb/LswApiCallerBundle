@@ -92,4 +92,12 @@ class ApiCallDataCollector extends DataCollector
     {
         return 'api';
     }
+
+    /**
+    * Support Symfony 3.4
+    */
+    public function reset()
+    {
+        $this->data = [];
+    }
 }
