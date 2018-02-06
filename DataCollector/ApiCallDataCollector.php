@@ -94,10 +94,10 @@ class ApiCallDataCollector extends DataCollector
     }
 
     /**
-    * Support Symfony 3.4
+    * {@inheritdoc}
     */
     public function reset()
     {
-        $this->data = [];
+        $this->data = array();
     }
 }

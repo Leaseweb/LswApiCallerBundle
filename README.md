@@ -12,7 +12,7 @@ It is easy to use from the code and is aimed to have full debugging capabilities
 ## Requirements
 
 * PHP 5.3 with curl support
-* Symfony 2.1
+* Symfony >= 2.1
 
 ## Installation
 
