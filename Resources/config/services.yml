@@ -2,7 +2,7 @@ parameters:
     api_caller.class: Lsw\ApiCallerBundle\Caller\LoggingApiCaller
     api_call_logger.class: Lsw\ApiCallerBundle\Logger\ApiCallLogger
     api_caller.data_collector.class: Lsw\ApiCallerBundle\DataCollector\ApiCallDataCollector
-    api_caller.data_collector.template: "LswApiCallerBundle:Collector:api"
+    api_caller.data_collector.template: "LswApiCaller/Collector/api.html.twig"
 
 services:
     api_caller:
@@ -17,4 +17,4 @@ services:
         class: "%api_caller.data_collector.class%"
         arguments: [ "@api_call_logger" ]
         tags:
-            - { name: data_collector, template: "%api_caller.data_collector.template%", id: "api"}
+            - { name: data_collector, template: "@%api_caller.data_collector.template%", id: "api"}
