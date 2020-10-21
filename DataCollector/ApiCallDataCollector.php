@@ -1,10 +1,11 @@
 <?php
 namespace Lsw\ApiCallerBundle\DataCollector;
 
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Lsw\ApiCallerBundle\Logger\ApiCallLoggerInterface;
+use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Throwable;
 
 /**
  * ApiCallDataCollector
@@ -28,7 +29,7 @@ class ApiCallDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, Throwable $exception = null)
     {
         $this->data = array(
             'calls'        => null !== $this->logger ? $this->logger->calls : array(),
