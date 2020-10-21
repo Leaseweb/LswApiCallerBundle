@@ -44,6 +44,19 @@
 {% block panel %}
     <h2>API Calls</h2>
 
+<script type="text/javascript">
+//<![CDATA[
+
+/**
+ * Display a base64 URL inside an iframe in another window.
+ * From https://ourcodeworld.com/articles/read/682/what-does-the-not-allowed-to-navigate-top-frame-to-data-url-javascript-exception-means-in-google-chrome
+ */
+function debugBase64(base64URL){
+    var win = window.open();
+    win.document.write('<iframe src="' + base64URL  + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+}
+//]]>
+</script>
     {% if not collector.callcount %}
         <p>
             <em>No calls.</em>
@@ -53,23 +66,28 @@
             {% for i, call in collector.calls %}
                 <li class="{{ i is odd ? 'odd' : 'even' }}">
                     <div>
-                        <strong>Status</strong>: {{ call.status }}<br />
-                        <strong>URL</strong>: {{ call.url }}<br />
+                        <strong>Status</strong>: {% if call.status is defined %} {{ call.status }} {% endif %}<br />
+                        <strong>URL</strong>: <a href='{{ call.url }}' target='_blank'>{{ call.url }}</a><br />
                         <strong>Type</strong>: {{ call.type }}<br />
                         <strong>Request</strong>: {{ call.requestData|length }} bytes
-                          <a href="data:text/plain;,{{ call.requestData|url_encode(true) }}">raw</a>
-                          <a href="data:text/html;,{{ call.requestData|url_encode(true) }}">html</a>
-                          <a href="data:text/plain;,{{ call.requestObject|url_encode(true) }}">parsed</a>
+                          <a href='' onClick='debugBase64("data:text/plain;,{{ call.requestData|url_encode(true) }}")'>raw</a>
+                          <a href='' onClick='debugBase64("data:text/html;,{{ call.requestData|url_encode(true) }}")'>html</a>
+                          <a href='' onClick='debugBase64("data:text/plain;,{{ call.requestObject|url_encode(true) }}")'>parsed</a>
                           <br />
-                        <strong>Response</strong>: {{ call.responseData|length }} bytes
-                          <a href="data:text/plain;,{{ call.responseData|url_encode(true) }}">raw</a>
-                          <a href="data:text/html;,{{ call.responseData|url_encode(true) }}">html</a>
-                          <a href="data:text/plain;,{{ call.responseObject|url_encode(true) }}">parsed</a>
+                        <strong>Response</strong>:
+                        {% if call.responseData is defined %}
+                          {{ call.responseData|length }} bytes
+                          <a href='' onClick='debugBase64("data:text/plain;,{{ call.responseData|url_encode(true) }}")'>raw</a>
+                          <a href='' onClick='debugBase64("data:text/html;,{{ call.responseData|url_encode(true) }}")'>html</a>
+                          <a href='' onClick='debugBase64("data:text/plain;,{{ call.responseObject|url_encode(true) }}")'>parsed</a>
                           <br />
+                        {%  endif %}
                     </div>
+                    {% if call.executionMS is defined %}
                     <small>
                         <strong>Time</strong>: {{ '%0.2f'|format(call.executionMS * 1000) }} ms
                     </small>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
