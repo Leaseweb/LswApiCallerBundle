@@ -1,7 +1,7 @@
 <?php
 namespace Lsw\ApiCallerBundle\Helper;
 
-use Doctrine\Common\Util\Inflector;
+use Doctrine\Inflector\Inflector;
 
 /**
  * Class to encapsulate PHP cUrl (curl_xxx) functions for unit tests
